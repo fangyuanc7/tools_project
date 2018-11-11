@@ -6,7 +6,7 @@ import pandas as pd
 ticker = input("What stock would you like to analyse? ")
 print ("You would like to analyze:  " + ticker)
 
-
+#test test test
 
 import requests
 from bs4 import BeautifulSoup
