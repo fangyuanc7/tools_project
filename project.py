@@ -11,7 +11,6 @@ ticker = input("What stock would you like to analyse? ")
 start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
 end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
 
-<<<<<<< HEAD
 #Can add allowance of multiple ticker input here later
 
 start_date = start.split('/')
@@ -19,9 +18,6 @@ start_year = int(start_date[0])
 start_month = int(start_date[1])
 start_day = int(start_date[2])
 start_date = datetime.datetime(start_year, start_month, start_day)
-=======
-#test test test
->>>>>>> 34e8f00842aef78b6e491da7d1788a6fcabc9d59
 
 end_date = end.split('/')
 end_year = int(end_date[0])
