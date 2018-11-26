@@ -50,13 +50,47 @@ except:
     print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
 #Visualize the stock's historical movement / volume
 #Compare to other stocks?
-
-def plot_historical_prices():
+def plot_historical_prices(df):
+    plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Adj Close'])
     plt.title(str(ticker) + ' Price from ' + str(start_date)[0:11] + 'to ' + str(end_date)[0:11])
     plt.ylabel('Stock Value')
     plt.xlabel('Date')
     plt.show()
 
-plot_historical_prices()
+plot_historical_prices(df)
+
+def plot_log_returns(df):
+    df_copy = df.copy(deep=True)
+    df_copy = df_copy.iloc[1:]
+    df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
+    #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
+    #print(df_copy)
+    plt.rcParams['figure.figsize'] = [20, 15]
+    plt.ylim(-.1, .1) #Edit this to be customized later
+    plt.xlim(start_date,end_date)    
+    plt.plot(df_copy['Date'], df_copy['Log Returns'])
+    plt.title(str(ticker) + ' Log returns from ' + str(start_date)[0:11] + 'to ' + str(end_date)[0:11])
+    plt.ylabel('Log Returns')
+    plt.xlabel('Date')
+    plt.show()
+    
+    #print(df['Adj Close']['AAPL'][1:])
+    #print(df['Adj Close']['AAPL'][1:]-df['Adj Close']['AAPL'][4:])
+    
+    #print(df['Adj Close'][1:]-df['Adj Close'][2:])    
+    
+    #df['Daily Returns'] = df['Adj Close']-df['Adj Close']
+    #print(df)
+    #df['Daily Returns'] = np.diff(df['Adj Close'])/df['Adj Close']
+    #df
+#     plt.plot(df['Date'], df['Adj Close'])
+#     plt.title(str(ticker) + ' Price from ' + str(start_date)[0:11] + 'to ' + str(end_date)[0:11])
+#     plt.ylabel('Stock Value')
+#     plt.xlabel('Date')
+#     plt.show()
+
+plot_log_returns(df)
+
+
 
