@@ -9,7 +9,22 @@ import fix_yahoo_finance as yf
 #import googlefinance.client
 
 def inputime():
-    ticker = input("What equity would you like to analyse? ")
+   # ticker = input("What equity would you like to analyse? ")
+    while True:
+    try:
+        ticker = input("What equity would you like to analyse? ")
+        url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
+        response = requests.get(url, verify=False)
+        sleep(4)
+        other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
+        summary_json_response = requests.get(other_details_json_link)
+        if not summary_json_response.status_code == 200:
+            raise ValueError
+        else:
+            break
+    except ValueError:
+        print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
+        
     start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
     end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
 
@@ -31,7 +46,7 @@ def inputime():
 
 start_,end_,ticker = inputime()
 
-while not (datetime.datetime(1950,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1950,1,1) < end_ <= datetime.datetime.now()):
+while not (datetime.datetime(1970,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_ <= datetime.datetime.now()):
     print("Your input time is out of our data bounds, please input again")
     start_,end_,ticker = inputime()
 #Add try/except ValueError if input ticker is not available in yahoo finance database
@@ -41,13 +56,11 @@ while not (datetime.datetime(1950,1,1) < start_ <= datetime.datetime.now()) and 
 
 #print(df.head(10))
 
-try:
-    print("Analyzing " +str(ticker) + " between the dates of " + str(start_) + " and " +str(end_) + ": ")
-    df = web.DataReader([ticker], 'yahoo', start_, end_)
-    df['Date'] = df.index.values
-    print(df.head(10))
-except:
-    print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
+print("Analyzing " +str(ticker) + " between the dates of " + str(start_) + " and " +str(end_) + ": ")
+df = web.DataReader([ticker], 'yahoo', start_, end_)
+df['Date'] = df.index.values
+print(df.head(10))
+
 #Visualize the stock's historical movement / volume
 #Compare to other stocks?
 def plot_historical_prices(df):
