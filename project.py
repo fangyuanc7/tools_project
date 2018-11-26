@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import datetime
-#%matplotlib inline
+import matplotlib.pyplot as plt
 import pandas_datareader.data as web
 import fix_yahoo_finance as yf
 #import googlefinance.client
@@ -33,7 +33,19 @@ end_date = datetime.datetime(end_year, end_month, end_day)
 
 print("Analyzing " + ticker + " between the dates of " + start + " and " + end + ": ")
 df = web.DataReader([ticker], 'yahoo', start_date, end_date)
-print(df.head(10))
+#print(df.head(10))
+df['Date'] = df.index.values
 
 #Visualize the stock's historical movement / volume
 #Compare to other stocks?
+
+def plot_historical_prices():
+    plt.plot(df['Date'], df['Adj Close'])
+    plt.title(str(ticker) + ' Price from ' + str(start_date)[0:11] + 'to ' + str(end_date)[0:11])
+    plt.ylabel('Stock Value')
+    plt.xlabel('Date')
+    plt.show()
+
+plot_historical_prices()
+
+
