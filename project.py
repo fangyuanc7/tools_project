@@ -27,24 +27,24 @@ def inputime():
     end_day = int(end_date[2])
     end_date = datetime.datetime(end_year, end_month, end_day)
 
-    return start_date,end_date
+    return start_date,end_date,ticker
 
-start_,end_ = inputime()
+start_,end_,ticker = inputime()
 
 while not (datetime.datetime(1950,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1950,1,1) < end_ <= datetime.datetime.now()):
     print("Your input time is out of our data bounds, please input again")
-    start_,end_ = inputime()
+    start_,end_,ticker = inputime()
 #Add try/except ValueError if input ticker is not available in yahoo finance database
 
 #Add try/except ValueError check here to make sure the input start/end year is within our data bounds 
 #i.e. check 1950?<=Year<=2018); 1<=month<=12; 1<=day<=28/30/31
 
 #print(df.head(10))
-df['Date'] = df.index.values
 
 try:
-    print("Analyzing " + ticker + " between the dates of " + start + " and " + end + ": ")
-    df = web.DataReader([ticker], 'yahoo', start_date, end_date)
+    print("Analyzing " +str(ticker) + " between the dates of " + str(start_) + " and " +str(end_) + ": ")
+    df = web.DataReader([ticker], 'yahoo', start_, end_)
+    df['Date'] = df.index.values
     print(df.head(10))
 except:
     print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
@@ -93,4 +93,12 @@ def plot_log_returns(df):
 plot_log_returns(df)
 
 
+def plot_historical_volume(df):
+    plt.rcParams['figure.figsize'] = [20, 15]
+    plt.plot(df['Date'], df['Volume'])
+    plt.title(str(ticker) + ' Volume from ' + str(start_date)[0:11] + 'to ' + str(end_date)[0:11])
+    plt.ylabel('Volume')
+    plt.xlabel('Date')
+    plt.show()
 
+plot_historical_volume(df)
