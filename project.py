@@ -31,11 +31,15 @@ end_date = datetime.datetime(end_year, end_month, end_day)
 #Add try/except ValueError check here to make sure the input start/end year is within our data bounds 
 #i.e. check 1950?<=Year<=2018); 1<=month<=12; 1<=day<=28/30/31
 
-print("Analyzing " + ticker + " between the dates of " + start + " and " + end + ": ")
-df = web.DataReader([ticker], 'yahoo', start_date, end_date)
 #print(df.head(10))
 df['Date'] = df.index.values
 
+try:
+    print("Analyzing " + ticker + " between the dates of " + start + " and " + end + ": ")
+    df = web.DataReader([ticker], 'yahoo', start_date, end_date)
+    print(df.head(10))
+except:
+    print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
 #Visualize the stock's historical movement / volume
 #Compare to other stocks?
 
@@ -47,5 +51,4 @@ def plot_historical_prices():
     plt.show()
 
 plot_historical_prices()
-
 
