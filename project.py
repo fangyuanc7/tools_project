@@ -1,3 +1,4 @@
+!pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 import numpy as np
 import pandas as pd
 import requests
@@ -102,3 +103,31 @@ plot_historical_prices(df)
 plot_log_returns(df)
 plot_historical_volume(df)
 plot_daily_volatility(df)
+
+from datetime import datetime, timedelta
+import matplotlib.dates as mdates
+from matplotlib.pyplot import subplots, draw
+from mpl_finance import candlestick_ohlc
+import matplotlib.pyplot as plt
+
+def plot_candlestick(df):
+    from matplotlib import dates as mdates
+    from matplotlib import ticker as mticker
+    from mpl_finance import candlestick_ohlc
+    import datetime as dt
+    df_copy = df.copy(deep=True)
+    data = df_copy
+    df_copy['Date']=mdates.date2num(df_copy['Date'].astype(dt.date))
+    fig = plt.figure()
+    ax1 = plt.subplot2grid((1,1),(0,0))
+    plt.ylabel('Price')
+    ax1.xaxis.set_major_locator(mticker.MaxNLocator(6))
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    p = candlestick_ohlc(ax1,df_copy.values,width=0.2)
+    dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index=False)]
+    fig = plt.figure()
+    ax1 = plt.subplot(1,1,1)
+    candlestick_ohlc(ax1, dataAr)
+    plt.show()
+
+plot_candlestick(df)
