@@ -16,7 +16,6 @@ def inputime():
             ticker = input("What equity would you like to analyze? ")
             url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
             response = requests.get(url, verify=False)
-            #sleep(4)
             other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
             summary_json_response = requests.get(other_details_json_link)
             if not summary_json_response.status_code == 200:
@@ -30,7 +29,7 @@ def inputime():
     end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
 
     #Can add allowance of multiple ticker input here later
-
+    
     start_date = start.split('/')
     start_year = int(start_date[0])
     start_month = int(start_date[1])
@@ -44,7 +43,7 @@ def inputime():
     end_date = datetime.datetime(end_year, end_month, end_day)
     return start_date, end_date, ticker
 
-start_,end_,ticker = inputime()
+start_, end_, ticker = inputime()
 
 while not (datetime.datetime(1970,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_ <= datetime.datetime.now()):
     print("Your input time is out of our data bounds, please input again")
@@ -68,7 +67,6 @@ def plot_log_returns(df):
     df_copy = df_copy.iloc[1:]
     df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
     #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
-    #print(df_copy)
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.ylim(-.1, .1) #Edit this to be customized later
     plt.xlim(start_,end_)
@@ -87,11 +85,11 @@ def plot_historical_volume(df):
     plt.show()
     
 def plot_daily_volatility(df):
-    df_copy = df.copy(deep=True)
-    df_copy['Daily Volatility'] =  (df_copy['High']-df_copy['Low'])/(df_copy['High']+df_copy['Low'])
+    df_copy = df.copy(deep = True)
+    df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.ylim(-.1, .1) #Edit this to be customized later
-    plt.xlim(start_,end_)
+    plt.xlim(start_, end_)
     plt.plot(df_copy['Date'], df_copy['Daily Volatility'])
     plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Daily Volatility')
@@ -117,17 +115,21 @@ def plot_candlestick(df):
     import datetime as dt
     df_copy = df.copy(deep=True)
     data = df_copy
-    df_copy['Date']=mdates.date2num(df_copy['Date'].astype(dt.date))
+    df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(dt.date))
     fig = plt.figure()
     ax1 = plt.subplot2grid((1,1),(0,0))
-    plt.ylabel('Price')
+    plt.title(str(ticker) + ' Candlestick Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Candlestick Volume')
     ax1.xaxis.set_major_locator(mticker.MaxNLocator(6))
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    p = candlestick_ohlc(ax1,df_copy.values,width=0.2)
-    dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index=False)]
+    p = candlestick_ohlc(ax1, df_copy.values, width=0.2)
+    dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index = False)]
     fig = plt.figure()
     ax1 = plt.subplot(1,1,1)
     candlestick_ohlc(ax1, dataAr)
+    plt.title(str(ticker) + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Candlestick Movement')
+    plt.xlabel('Date')
     plt.show()
 
 plot_candlestick(df)
