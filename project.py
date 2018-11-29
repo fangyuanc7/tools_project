@@ -85,7 +85,20 @@ def plot_historical_volume(df):
     plt.xlabel('Date')
     plt.show()
     
+def plot_daily_volatility(df):
+    df_copy = df.copy(deep=True)
+    df_copy['Daily Volatility'] =  (df_copy['High']-df_copy['Low'])/(df_copy['High']+df_copy['Low'])
+    plt.rcParams['figure.figsize'] = [20, 15]
+    plt.ylim(-.1, .1) #Edit this to be customized later
+    plt.xlim(start_,end_)
+    plt.plot(df_copy['Date'], df_copy['Daily Volatility'])
+    plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Daily Volatility')
+    plt.xlabel('Date')
+    plt.show()
+    
 #PLOTTING HERE
 plot_historical_prices(df)
 plot_log_returns(df)
 plot_historical_volume(df)
+plot_daily_volatility(df)
