@@ -1,4 +1,5 @@
 !pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+!pip install tabulate
 import numpy as np
 import pandas as pd
 import requests
@@ -7,6 +8,11 @@ import datetime
 import matplotlib.pyplot as plt
 import pandas_datareader.data as web
 import fix_yahoo_finance as yf
+from tabulate import tabulate
+import seaborn
+import scipy.stats
+from scipy.stats import norm
+import math
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -131,11 +137,11 @@ def plot_Value_at_Risk(df):
                    headers = ['Confidence Level', 'Value at Risk']))
     
 #PLOTTING HERE
-plot_historical_prices(df)
-plot_log_returns(df)
-plot_historical_volume(df)
-plot_daily_volatility(df)
-plot_Value_at_Risk(df)
+# plot_historical_prices(df)
+# plot_log_returns(df)
+# plot_historical_volume(df)
+# plot_daily_volatility(df)
+# plot_Value_at_Risk(df)
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
@@ -168,4 +174,57 @@ def plot_candlestick(df):
     plt.xlabel('Date')
     plt.show()
 
-plot_candlestick(df)
+# plot_candlestick(df)
+
+#create a dropdown menu for the graphs display based on user input
+
+from tkinter import *
+OPTIONS = [
+"Please Choose One Type of Graph",
+"Historical Prices",
+"Log Returns",
+"Historical Volume",
+"Daily Volatility",
+"Value at Risk (VaR)",
+"Candlestick",
+"Max Drawdown Plot",
+"Momentum Oscillators"
+] 
+
+master = Tk()
+master.title("Select the type of data visualization")
+
+# Add a grid
+mainframe = Frame(master)
+mainframe.grid(column=0,row=0, sticky=(N,W,E,S) )
+mainframe.columnconfigure(0, weight = 1)
+mainframe.rowconfigure(0, weight = 1)
+mainframe.pack(pady = 100, padx = 200)
+
+variable = StringVar(master)
+variable.set(OPTIONS[0]) # default value
+
+w = OptionMenu(master, variable, *OPTIONS)
+w.pack()
+
+def ok():
+    print ("Graph You Picked Is: " + variable.get())
+    
+button = Button(master, text="Visualize", command=ok)
+button.pack()
+
+mainloop()
+
+graph= variable.get()
+if graph == OPTIONS[1]:
+    plot_historical_prices(df)
+elif graph == OPTIONS[2]:
+    plot_log_returns(df)
+elif graph == OPTIONS[3]:
+    plot_historical_volume(df)
+elif graph == OPTIONS[4]:
+    plot_daily_volatility(df)
+elif graph == OPTIONS[5]:
+    plot_Value_at_Risk(df)
+elif graph == OPTIONS[6]:
+    plot_candlestick(df)
