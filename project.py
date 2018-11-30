@@ -64,9 +64,15 @@ def inputime():
 
 start_, end_, ticker = inputime()
 
-while not (datetime.datetime(1970,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_ <= datetime.datetime.now()):
-    print("Your input time is out of our data bounds, please input again")
-    start_, end_, ticker = inputime()
+while True:
+    try:
+        start_, end_, ticker = inputime()
+        if (datetime.datetime(1970,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_ <= datetime.datetime.now()):
+            break
+        else:
+            print('\033[1m' + "Your input time is out of our data bounds, please input again")
+    except:
+        print('\033[1m' + "Your input time is illegal, please input again")
 
 print("Analyzing " + str(ticker) + " between the dates of " + str(start_) + " and " + str(end_) + ": ")
 df = web.DataReader([ticker], 'yahoo', start_, end_)
