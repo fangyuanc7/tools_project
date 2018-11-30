@@ -1,5 +1,18 @@
 !pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
-!pip install tabulate
+# !pip install tabulate
+# !pip install numpy
+# !pip install pandas
+# !pip install requests
+# !pip install requests
+# !pip install bs4
+# !pip install datetime
+# !pip install matplotlib.pylot
+# !pip install pandas_datareader.data
+# !pip install fix_yahoo_finance
+# !pip install seaborn
+# !pip isntall scipy.stats
+# !pip install math
+# !pip install urllib3
 import numpy as np
 import pandas as pd
 import requests
