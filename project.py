@@ -126,6 +126,7 @@ def plot_candlestick(df):
     dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index = False)]
     fig = plt.figure()
     ax1 = plt.subplot(1,1,1)
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
     candlestick_ohlc(ax1, dataAr)
     plt.title(str(ticker) + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Candlestick Movement')
