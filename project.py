@@ -75,7 +75,7 @@ def plot_historical_prices(df):
     plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
     plt.plot(df['Date'], upper_band, label = 'Upper Band')
     plt.plot(df['Date'], lower_band, label = 'Lower Band') 
-    plt.legend(loc='best')
+    plt.legend(loc = 'best')
     plt.show()
 
 def plot_log_returns(df):
@@ -129,12 +129,47 @@ def plot_Value_at_Risk(df):
     plt.xlabel('Returns')
     plt.show()
     
-    VaR_90perc = norm.ppf(1-0.9, mean, std)
-    VaR_95perc = norm.ppf(1-0.95, mean, std)
-    VaR_99perc = norm.ppf(1-0.99, mean, std)
+    VaR_90perc = norm.ppf(.1, mean, std)
+    VaR_95perc = norm.ppf(.05, mean, std)
+    VaR_99perc = norm.ppf(.01, mean, std)
     
     print(tabulate([['90%', VaR_90perc], ['95%', VaR_95perc], ['99%', VaR_99perc]], 
                    headers = ['Confidence Level', 'Value at Risk']))
+
+def plot_Point_and_Figure(df):
+    BOX = 2
+    #START = 300
+    #print(df['Adj Close'].iloc[1])
+    START = df['Adj Close'].iloc[0]
+    df_copy = df.copy(deep = True)
+    #df_copy = df_copy.iloc[1:]
+    
+    df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
+    df_copy = df_copy.drop(df.index[0])
+    #print(df_copy['changes'])
+    #for chg in df_copy['changes']:
+    #    print(chg)
+    #print(changes)
+    
+    fig = plt.figure(figsize=(5, 10))
+    ax = fig.add_axes([.15, .15, .7, .7])
+
+    def sign(val):
+        if val == 0:
+            return 0
+        else:
+            return (val / abs(val))
+
+    pointChanges = []
+   
+    for chg in df_copy['changes']:
+#        print(sign(float(chg)))
+#        print(math.floor(abs(float(chg))))
+#         print(type(chg))
+#         print(float(chg))
+#         print(sign(chg))
+#         print(abs(chg))
+        pointChanges += [sign(float(chg))] * math.floor(abs(float(chg)))
     
 #PLOTTING HERE
 # plot_historical_prices(df)
@@ -142,6 +177,7 @@ def plot_Value_at_Risk(df):
 # plot_historical_volume(df)
 # plot_daily_volatility(df)
 # plot_Value_at_Risk(df)
+# plot_Point_and_Figure(df)
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
