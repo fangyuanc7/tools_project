@@ -44,35 +44,35 @@ def inputime():
         except ValueError:
             print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
 
-    start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
-    end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
-
-    #Can add allowance of multiple ticker input here later
+    while True:
+        try:
+            start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
+            end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
+            
+            #Can add allowance of multiple ticker input here later
+            
+            start_date = start.split('/')
+            start_year = int(start_date[0])
+            start_month = int(start_date[1])
+            start_day = int(start_date[2])
+            start_date = datetime.datetime(start_year, start_month, start_day)
+            
+            end_date = end.split('/')
+            end_year = int(end_date[0])
+            end_month = int(end_date[1])
+            end_day = int(end_date[2])
+            end_date = datetime.datetime(end_year, end_month, end_day)
+            
+            if (datetime.datetime(1970,1,1) < start_date <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_date <= datetime.datetime.now()):
+                break
+            else:
+                print('\033[1m' + "Your input time is out of our data bounds, please input again")  
+        except:
+            print('\033[1m' + "Your input time is illegal, please input again")
     
-    start_date = start.split('/')
-    start_year = int(start_date[0])
-    start_month = int(start_date[1])
-    start_day = int(start_date[2])
-    start_date = datetime.datetime(start_year, start_month, start_day)
-    
-    end_date = end.split('/')
-    end_year = int(end_date[0])
-    end_month = int(end_date[1])
-    end_day = int(end_date[2])
-    end_date = datetime.datetime(end_year, end_month, end_day)
     return start_date, end_date, ticker
-
 start_, end_, ticker = inputime()
 
-while True:
-    try:
-        start_, end_, ticker = inputime()
-        if (datetime.datetime(1970,1,1) < start_ <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_ <= datetime.datetime.now()):
-            break
-        else:
-            print('\033[1m' + "Your input time is out of our data bounds, please input again")
-    except:
-        print('\033[1m' + "Your input time is illegal, please input again")
 
 print("Analyzing " + str(ticker) + " between the dates of " + str(start_) + " and " + str(end_) + ": ")
 df = web.DataReader([ticker], 'yahoo', start_, end_)
