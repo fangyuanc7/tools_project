@@ -56,10 +56,15 @@ print(df.head(10))
 
 def plot_historical_prices(df):
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.plot(df['Date'], df['Adj Close'])
+    plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+    long_rolling =  df['Adj Close'].rolling(window=100).mean()
+    ema_short = df['Adj Close'].ewm(span=20, adjust=False).mean()
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
     plt.xlabel('Date')
+    plt.plot(df['Date'], ema_short, label = 'Span 20-days EMA')
+    plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')
+    plt.legend(loc='best')
     plt.show()
 
 def plot_log_returns(df):
