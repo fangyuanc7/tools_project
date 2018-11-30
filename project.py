@@ -293,3 +293,14 @@ elif graph == OPTIONS[5]:
     plot_Value_at_Risk(df)
 elif graph == OPTIONS[6]:
     plot_candlestick(df)
+
+def plot_cdf(df):
+    plt.rcParams['figure.figsize'] = [20, 15]
+    start_date_price = df.iloc[0,5]
+    cum_return = (df['Adj Close']-start_date_price)/start_date_price
+    plt.plot(df['Date'],cum_return)
+    plt.title(' Cumulative Return of ' + str(ticker) + ' from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Cumulative Return')
+    plt.xlabel('Date')
+    plt.show()
+plot_cdf(df)   
