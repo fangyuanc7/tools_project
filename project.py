@@ -28,6 +28,7 @@ from scipy.stats import norm
 import math
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from tkinter import *
 
 def inputime():
     while True:
@@ -247,9 +248,7 @@ def plot_candlestick(df):
 
 # plot_candlestick(df)
 
-#create a dropdown menu for the graphs display based on user input
-
-from tkinter import *
+#create a dropdown menu for the graphs display based on user selection
 OPTIONS = [
 "Please Choose One Type of Graph",
 "Historical Prices",
@@ -279,7 +278,8 @@ w = OptionMenu(master, variable, *OPTIONS)
 w.pack()
 
 def ok():
-    print ("Graph You Picked Is: " + variable.get())
+    print ("\n Graph You Picked Is: " + variable.get())
+    master.quit()
     
 button = Button(master, text="Visualize", command=ok)
 button.pack()
@@ -287,18 +287,21 @@ button.pack()
 mainloop()
 
 graph= variable.get()
-if graph == OPTIONS[1]:
-    plot_historical_prices(df)
-elif graph == OPTIONS[2]:
-    plot_log_returns(df)
-elif graph == OPTIONS[3]:
-    plot_historical_volume(df)
-elif graph == OPTIONS[4]:
-    plot_daily_volatility(df)
-elif graph == OPTIONS[5]:
-    plot_Value_at_Risk(df)
-elif graph == OPTIONS[6]:
-    plot_candlestick(df)
+
+def draw_graph():
+    if graph == OPTIONS[1]:
+        plot_historical_prices(df)
+    elif graph == OPTIONS[2]:
+        plot_log_returns(df)
+    elif graph == OPTIONS[3]:
+        plot_historical_volume(df)
+    elif graph == OPTIONS[4]:
+        plot_daily_volatility(df)
+    elif graph == OPTIONS[5]:
+        plot_Value_at_Risk(df)
+    elif graph == OPTIONS[6]:
+        plot_candlestick(df)
+draw_graph()
 
 def plot_cdf(df):
     plt.rcParams['figure.figsize'] = [20, 15]
