@@ -84,8 +84,8 @@ def plot_log_returns(df):
     df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
     #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.ylim(-.1, .1) #Edit this to be customized later
-    plt.xlim(start_,end_)
+    plt.ylim(-.1, .1) #Edit 
+    plt.xlim(start_, end_)
     plt.plot(df_copy['Date'], df_copy['Log Returns'])
     plt.title(str(ticker) + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Log Returns')
@@ -137,7 +137,7 @@ def plot_Value_at_Risk(df):
                    headers = ['Confidence Level', 'Value at Risk']))
 
 def plot_Point_and_Figure(df):
-    BOX = 2
+    BOX = 2 #edit here
     #START = 300
     #print(df['Adj Close'].iloc[1])
     START = df['Adj Close'].iloc[0]
@@ -170,6 +170,22 @@ def plot_Point_and_Figure(df):
 #         print(sign(chg))
 #         print(abs(chg))
         pointChanges += [sign(float(chg))] * math.floor(abs(float(chg)))
+        symbol = {-1:'o',
+                  #0:'',
+                  1:'x'}
+
+    chgStart = START
+    for ichg, chg in enumerate(df_copy['changes']):
+        x = [ichg + 1] * math.floor(abs(chg))
+        y = [chgStart + i * BOX * sign(float(chg)) for i in range(math.floor(abs(chg)))] 
+        chgStart += BOX * sign(float(chg)) * (math.floor(abs(chg))-2)
+        ax.scatter(x, y,
+                   marker=symbol[sign(float(chg))],
+                   #c='red', #figure out coloring map later
+                   s=175)   #<----- control size of scatter symbol
+
+    ax.set_xlim(0, len(changes)+1)
+    plt.show()  
     
 #PLOTTING HERE
 # plot_historical_prices(df)
