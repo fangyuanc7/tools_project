@@ -96,27 +96,36 @@ def plot_daily_volatility(df):
     plt.xlabel('Date')
     plt.show()
     
-def plot_value_at_risk(df):
-    import seaborn
-    import matplotlib.mlab as mlab
-    from scipy.stats import norm
-    from tabulate import tabulate
-    df = df[['Close']]
-    df['returns'] = df.Close.pct_change()
-    mean = np.mean(df['returns'])
-    std = np.std(df['returns'])
+def plot_Value_at_Risk(df):
+    pd.options.mode.chained_assignment = None
     
-    df['returns'].hist(bins = 40, normed=True, histtype = 'stepfilled', alpha=0.5)
+    df = df[['Close']]
+    df['Returns'] = df.Close.pct_change()
+    mean = np.mean(df['Returns'])
+    std = np.std(df['Returns'])
+    
+    df['Returns'].hist(bins = 40, histtype = 'bar', alpha = 1)
     x = np.linspace(mean - 3*std, mean + 3*std, 100)
-    plt.plot(x, mlab.normpdf(x, mean, std), "r")
+    plt.rcParams['figure.figsize'] = [10, 5]
+    plt.plot(x, scipy.stats.norm.pdf(x, mean, std), "r")
+    plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Frequency')
+    plt.xlabel('Returns')
     plt.show()
+    
+    VaR_90perc = norm.ppf(1-0.9, mean, std)
+    VaR_95perc = norm.ppf(1-0.95, mean, std)
+    VaR_99perc = norm.ppf(1-0.99, mean, std)
+    
+    print(tabulate([['90%', VaR_90perc], ['95%', VaR_95perc], ['99%', VaR_99perc]], 
+                   headers = ['Confidence Level', 'Value at Risk']))
     
 #PLOTTING HERE
 plot_historical_prices(df)
 plot_log_returns(df)
 plot_historical_volume(df)
 plot_daily_volatility(df)
-plot_value_at_risk(df)
+plot_Value_at_Risk(df)
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
