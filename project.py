@@ -145,7 +145,7 @@ def plot_candlestick(df):
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
     candlestick_ohlc(ax1, dataAr)
     plt.title(str(ticker) + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Candlestick Movement')
+    plt.ylabel('Price')
     plt.xlabel('Date')
     plt.show()
 
