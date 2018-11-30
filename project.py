@@ -96,11 +96,27 @@ def plot_daily_volatility(df):
     plt.xlabel('Date')
     plt.show()
     
+def plot_value_at_risk(df):
+    import seaborn
+    import matplotlib.mlab as mlab
+    from scipy.stats import norm
+    from tabulate import tabulate
+    df = df[['Close']]
+    df['returns'] = df.Close.pct_change()
+    mean = np.mean(df['returns'])
+    std = np.std(df['returns'])
+    
+    df['returns'].hist(bins = 40, normed=True, histtype = 'stepfilled', alpha=0.5)
+    x = np.linspace(mean - 3*std, mean + 3*std, 100)
+    plt.plot(x, mlab.normpdf(x, mean, std), "r")
+    plt.show()
+    
 #PLOTTING HERE
 plot_historical_prices(df)
 plot_log_returns(df)
 plot_historical_volume(df)
 plot_daily_volatility(df)
+plot_value_at_risk(df)
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
