@@ -57,8 +57,8 @@ print(df.head(10))
 def plot_historical_prices(df):
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Adj Close'],label = 'Price')
-    long_rolling =  df['Adj Close'].rolling(window=50).mean()
-    long_rolling_std = df['Adj Close'].rolling(window=50).std()    
+    long_rolling =  df['Adj Close'].rolling(window=15).mean()
+    long_rolling_std = df['Adj Close'].rolling(window=15).std()    
     upper_band = long_rolling + (long_rolling_std*1.5)
     lower_band = long_rolling - (long_rolling_std*1.5)
     ema_short = df['Adj Close'].ewm(span=20, adjust=False).mean()
