@@ -253,6 +253,9 @@ def plot_candlestick(df):
 # plot_candlestick(df)
 
 def plot_max_drawdown(df):
+    '''
+    Takes in dataframe with high and low stock price, and returns a max daily drawdown plot with rolling window of 7.
+    '''
     df_copy = df.copy(deep = True)
     Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
 # print(Roll_Max)
@@ -268,6 +271,11 @@ def plot_max_drawdown(df):
     plt.ylabel('Max_Daily_Drawdown')
     plt.xlabel('Date')
     plt.show()
+    description = "A maximum drawdown (MDD) is the maximum loss from a peak to a trough of a portfolio, "
+    description += "before a new peak is attained. \nMaximum Drawdown (MDD) is an indicator of downside risk over a specified time period. "
+    description += "\nMDD = (Trough Value – Peak Value) ÷ Peak Value"
+    description += "\nIn this graph, it shows a rolling window of 7 days of daily maximum drawdown, given the time period provided by user."
+    print(description)
 # plot_max_drawdown(df)
 
 #create a dropdown menu for the graphs display based on user selection
