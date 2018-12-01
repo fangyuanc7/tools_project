@@ -164,6 +164,9 @@ def plot_Value_at_Risk(df):
                    headers = ['Confidence Level', 'Value at Risk']))
 
 def plot_Point_and_Figure(df):
+    '''
+    Takes in dataframe with time-series stock returns, and returns a Point and Figure chart.
+    '''
     BOX = 2 
     #START = 300
     START = df['Adj Close'].iloc[0]
@@ -200,6 +203,12 @@ def plot_Point_and_Figure(df):
     plt.ylabel('Price')
     plt.xlabel('Frequency')
     plt.show()  
+    
+    print("Point and Figure charts allow the user to identify significant changes in the price. Instead of the horizontal axis" +  
+          "representing time, as it does in many of the other plots, it instead represents changes in direction. Any up " + 
+          "movements of a significant amount will be charted as an 'X', and any down movements of a significant amount will be " +
+          "charted as an 'O'. There are several advantages to using a P&F Chart, such as filtering out insignificant price " +
+          "movements and noise, as well as allowing the user to distinguish support and resistance levels for the stock.")
     
 #PLOTTING HERE
 # plot_historical_prices(df)
@@ -278,7 +287,7 @@ def ok():
     print ("\n Graph You Picked Is: " + variable.get())
     master.quit()
     
-button = Button(master, text = "Visualize", command=ok)
+button = Button(master, text = "Visualize", command = ok)
 button.pack()
 
 mainloop()
