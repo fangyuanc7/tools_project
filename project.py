@@ -164,21 +164,13 @@ def plot_Value_at_Risk(df):
                    headers = ['Confidence Level', 'Value at Risk']))
 
 def plot_Point_and_Figure(df):
-    BOX = 2 #edit here
+    BOX = 2 
     #START = 300
-    #print(df['Adj Close'].iloc[1])
     START = df['Adj Close'].iloc[0]
-    df_copy = df.copy(deep = True)
-    #df_copy = df_copy.iloc[1:]
-    
+    df_copy = df.copy(deep = True)    
     df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
     df_copy = df_copy.drop(df.index[0])
-    #print(df_copy['changes'])
-    #for chg in df_copy['changes']:
-    #    print(chg)
-    #print(changes)
-    
-    fig = plt.figure(figsize=(5, 10))
+    fig = plt.figure(figsize=(10, 15))
     ax = fig.add_axes([.15, .15, .7, .7])
 
     def sign(val):
@@ -187,31 +179,26 @@ def plot_Point_and_Figure(df):
         else:
             return (val / abs(val))
 
-    pointChanges = []
-   
-    for chg in df_copy['changes']:
-#        print(sign(float(chg)))
-#        print(math.floor(abs(float(chg))))
-#         print(type(chg))
-#         print(float(chg))
-#         print(sign(chg))
-#         print(abs(chg))
-        pointChanges += [sign(float(chg))] * math.floor(abs(float(chg)))
+    change_points = []
+    for change in df_copy['changes']:
+        change_points += [sign(float(change))] * math.floor(abs(float(change)))
         symbol = {-1:'o',
-                  #0:'',
                   1:'x'}
 
-    chgStart = START
-    for ichg, chg in enumerate(df_copy['changes']):
-        x = [ichg + 1] * math.floor(abs(chg))
-        y = [chgStart + i * BOX * sign(float(chg)) for i in range(math.floor(abs(chg)))] 
-        chgStart += BOX * sign(float(chg)) * (math.floor(abs(chg))-2)
+    change_start = START
+    for x_change, change in enumerate(df_copy['changes']):
+        x = [x_change + 1] * math.floor(abs(change))
+        y = [change_start + i * BOX * sign(float(change)) for i in range(math.floor(abs(change)))] 
+        change_start += BOX * sign(float(change)) * (math.floor(abs(change))-2)
         ax.scatter(x, y,
-                   marker=symbol[sign(float(chg))],
-                   #c='red', #figure out coloring map later
-                   s=175)   #<----- control size of scatter symbol
+                   marker = symbol[sign(float(change))],
+                   c = 'blue', 
+                   s = 100)   
 
-    ax.set_xlim(0, len(changes)+1)
+    ax.set_xlim(0, len(df_copy['changes']) + 1)
+    plt.title(str(ticker) + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Price')
+    plt.xlabel('Frequency')
     plt.show()  
     
 #PLOTTING HERE
