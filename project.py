@@ -13,6 +13,8 @@
 # !pip isntall scipy.stats
 # !pip install math
 # !pip install urllib3
+# !pip install tkinter
+
 import numpy as np
 import pandas as pd
 import requests
@@ -31,6 +33,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tkinter import *
 
 def user_input():
+    '''
+    Main function where user inputs stock ticker and time periods for analysis and data visualization. 
+    '''
+    
     while True:
         try:
             ticker = input("What equity would you like to analyze? Please enter the ticker name (case insensitive).")
@@ -70,6 +76,7 @@ def user_input():
             print('\033[1m' + "Your input time is illegal, please input again")
     
     return start_date, end_date, ticker
+
 start_, end_, ticker = user_input()
 
 print("Analyzing " + str(ticker) + " between the dates of " + str(start_) + " and " + str(end_) + ": ")
@@ -78,6 +85,11 @@ df['Date'] = df.index.values
 print(df.head(10))
 
 def plot_historical_prices(df):
+    '''
+    Takes in dataframe with time-series stock closing prices, and returns a plot with historical prices, 
+    as well as a moving average curve and Bollinger Bands attached.
+    '''
+    
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Adj Close'], label = 'Price')
     long_rolling =  df['Adj Close'].rolling(window = 15).mean()
@@ -94,15 +106,21 @@ def plot_historical_prices(df):
     plt.plot(df['Date'], lower_band, label = 'Lower Band') 
     plt.legend(loc = 'best')
     plt.show()
+    
     description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
     description +=' out the “noise” from random price fluctuations.'
     description += 'It is a trend-following, or lagging, indicator because it is based on past prices.'
     print(description)
+    
     d2 = 'A Bollinger Band is a set of lines plotted two standard deviations (positively and negatively) away from a simple moving'
     d2 += "average of the security's price. It is normally plotted two standard deviations away from a simple moving average"
     print(d2)
     
 def plot_log_returns(df):
+    '''
+    Takes in dataframe with time-series stock closing prices, and returns a plot with log returns.
+    '''
+
     df_copy = df.copy(deep = True)
     df_copy = df_copy.iloc[1:]
     df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
@@ -115,7 +133,15 @@ def plot_log_returns(df):
     plt.ylabel('Log Returns')
     plt.xlabel('Date')
     plt.show()
-
+    
+    description = "Rather than calculating the normal differences and returns, we present a lognormal returns "
+    description += "graph. The advantages of using log returns compared to raw differences in prices are that "
+    description += "arithmetic returns would have a positive bias (stock prices cannot fall below zero); this "
+    description += "bias is eliminated through taking the log as that normalizes the returns. This is furthermore "
+    description += "important because stocks grow at a compounded rate based on the prior day's value."
+    
+    print(description)
+    
 def plot_cdf(df):
     plt.rcParams['figure.figsize'] = [20, 15]
     start_date_price = df.iloc[0, 5]
@@ -127,12 +153,21 @@ def plot_cdf(df):
     plt.show()
 
 def plot_historical_volume(df):
+    '''
+    Takes in dataframe with time-series stock closing prices, and returns a graph with the historical trading volume.
+    '''
+    
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Volume'])
     plt.title(str(ticker) + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Volume')
     plt.xlabel('Date')
     plt.show()
+    
+    description = "The historical trading volume shows how often the stock has been traded in the past and can be " 
+    description += "used in conjunction with the other graphs to examine the market sentiment and stock liquidity."
+    
+    print(description)
     
 def plot_daily_volatility(df):
     df_copy = df.copy(deep = True)
@@ -145,6 +180,7 @@ def plot_daily_volatility(df):
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
     plt.show()
+    
     description = 'Daily changes in a price of a good or service based on imbalances between the supply and demand.'
     description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause panic
     description += 'and drive prices up when there is fear of too few sellers compared to buyers.'
@@ -152,6 +188,10 @@ def plot_daily_volatility(df):
     
     
 def plot_Value_at_Risk(df):
+    '''
+    Takes in dataframe with time-series stock closing prices, and returns a Value at Risk curve.
+    '''
+    
     pd.options.mode.chained_assignment = None
     
     df = df[['Close']]
@@ -175,18 +215,27 @@ def plot_Value_at_Risk(df):
     print(tabulate([['90%', VaR_90perc], ['95%', VaR_95perc], ['99%', VaR_99perc]], 
                    headers = ['Confidence Level', 'Value at Risk']))
 
+    description = "This Value at Risk curve shows the user the potential risk and volatility of the input stock. "
+    description += "VaR helps answer the question of 'Within a specific confidence level, how much money could I lose "
+    description += "in this investment?' The table above shows that, within a 90, 95, and 99 percentile confidence " 
+    description += "level, the user by investing in the input stock could expect to, in a worst case scenario, lose"
+    descirption += "up to the respective percentage level."
+
+    print(description)
+    
 def plot_Point_and_Figure(df):
     '''
-    Takes in dataframe with time-series stock returns, and returns a Point and Figure chart.
+    Takes in dataframe with time-series stock closing prices, and returns a Point and Figure chart.
     '''
-    BOX = 2 
+    
+    BOX = 2
     #START = 300
     START = df['Adj Close'].iloc[0]
     df_copy = df.copy(deep = True)    
     df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
     df_copy = df_copy.drop(df.index[0])
-    fig = plt.figure(figsize=(10, 15))
-    ax = fig.add_axes([.15, .15, .7, .7])
+    fig = plt.figure(figsize = (5, 10))
+    ax = fig.add_axes([1, 1, 2, 2])
 
     def sign(val):
         if val == 0:
@@ -198,7 +247,8 @@ def plot_Point_and_Figure(df):
     for change in df_copy['changes']:
         change_points += [sign(float(change))] * math.floor(abs(float(change)))
         symbol = {-1:'o',
-                  1:'x'}
+                   0:'None',
+                   1:'x'}
 
     change_start = START
     for x_change, change in enumerate(df_copy['changes']):
@@ -216,11 +266,14 @@ def plot_Point_and_Figure(df):
     plt.xlabel('Frequency')
     plt.show()  
     
-    print("Point and Figure charts allow the user to identify significant changes in the price. Instead of the horizontal axis" +  
-          "representing time, as it does in many of the other plots, it instead represents changes in direction. Any up " + 
-          "movements of a significant amount will be charted as an 'X', and any down movements of a significant amount will be " +
-          "charted as an 'O'. There are several advantages to using a P&F Chart, such as filtering out insignificant price " +
-          "movements and noise, as well as allowing the user to distinguish support and resistance levels for the stock.")
+    description = "Point and Figure charts allow the user to identify significant changes in the price. Instead of the "
+    description += "horizontal axis representing time, as it does in many of the other plots, it instead represents "
+    description += "changes in direction. Any up movements of a significant amount are charted as an 'X', and any "
+    description += "down movements of a significant amount are charted as an 'O'. There are several advantages to "
+    description += "using a P&F Chart, such as filtering out insignificant price movements and noise, as well as " 
+    descirption += "allowing the user to distinguish support and resistance levels for the stock.")
+        
+    print(description)
     
 #PLOTTING HERE
 # plot_historical_prices(df)
@@ -261,10 +314,12 @@ def plot_candlestick(df):
     plt.ylabel('Price')
     plt.xlabel('Date')
     plt.show()
+    
     description = 'A candlestick is a type of price chart that displays the high, low, open and closing prices of a security'
     description += ' for a specific period. The wide part of the candlestick is called the "real body" '
     description += 'and tells investors whether the closing price was higher or lower than the opening price '
     description += 'with red if the stock closed lower, orange if the stock closed higher.'
+    
     print(description)
 
 # plot_candlestick(df)
@@ -273,6 +328,7 @@ def plot_max_drawdown(df):
     '''
     Takes in dataframe with high and low stock price, and returns a max daily drawdown plot with rolling window of 7.
     '''
+    
     df_copy = df.copy(deep = True)
     Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
 # print(Roll_Max)
