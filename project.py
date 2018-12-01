@@ -30,7 +30,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from tkinter import *
 
-def inputime():
+def user_input():
     while True:
         try:
             ticker = input("What equity would you like to analyze? ")
@@ -49,9 +49,7 @@ def inputime():
         try:
             start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
             end = input("When would you like to end analyzing? Please enter date in format YYYY/MM/DD: ")
-            
-            #Can add allowance of multiple ticker input here later
-            
+                        
             start_date = start.split('/')
             start_year = int(start_date[0])
             start_month = int(start_date[1])
@@ -72,8 +70,7 @@ def inputime():
             print('\033[1m' + "Your input time is illegal, please input again")
     
     return start_date, end_date, ticker
-start_, end_, ticker = inputime()
-
+start_, end_, ticker = user_input()
 
 print("Analyzing " + str(ticker) + " between the dates of " + str(start_) + " and " + str(end_) + ": ")
 df = web.DataReader([ticker], 'yahoo', start_, end_)
@@ -82,12 +79,12 @@ print(df.head(10))
 
 def plot_historical_prices(df):
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.plot(df['Date'], df['Adj Close'],label = 'Price')
-    long_rolling =  df['Adj Close'].rolling(window=15).mean()
-    long_rolling_std = df['Adj Close'].rolling(window=15).std()    
+    plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+    long_rolling =  df['Adj Close'].rolling(window = 15).mean()
+    long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
     upper_band = long_rolling + (long_rolling_std*1.5)
     lower_band = long_rolling - (long_rolling_std*1.5)
-    ema_short = df['Adj Close'].ewm(span=20, adjust=False).mean()
+    ema_short = df['Adj Close'].ewm(span = 20, adjust = False).mean()
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
     plt.xlabel('Date')
@@ -99,16 +96,26 @@ def plot_historical_prices(df):
     plt.show()
 
 def plot_log_returns(df):
-    df_copy = df.copy(deep=True)
+    df_copy = df.copy(deep = True)
     df_copy = df_copy.iloc[1:]
     df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
     #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.ylim(-.1, .1) #Edit 
+    plt.ylim(-.2, .2) 
     plt.xlim(start_, end_)
     plt.plot(df_copy['Date'], df_copy['Log Returns'])
     plt.title(str(ticker) + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Log Returns')
+    plt.xlabel('Date')
+    plt.show()
+
+def plot_cdf(df):
+    plt.rcParams['figure.figsize'] = [20, 15]
+    start_date_price = df.iloc[0, 5]
+    cum_return = (df['Adj Close']-start_date_price)/start_date_price
+    plt.plot(df['Date'],cum_return)
+    plt.title(' Cumulative Return of ' + str(ticker) + ' from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
     plt.show()
 
@@ -124,7 +131,7 @@ def plot_daily_volatility(df):
     df_copy = df.copy(deep = True)
     df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.ylim(-.1, .1) #Edit this to be customized later
+    plt.ylim(-.2, .2)
     plt.xlim(start_, end_)
     plt.plot(df_copy['Date'], df_copy['Daily Volatility'])
     plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
@@ -210,6 +217,7 @@ def plot_Point_and_Figure(df):
 #PLOTTING HERE
 # plot_historical_prices(df)
 # plot_log_returns(df)
+# plot_cdf(df)   
 # plot_historical_volume(df)
 # plot_daily_volatility(df)
 # plot_Value_at_Risk(df)
@@ -226,11 +234,11 @@ def plot_candlestick(df):
     from matplotlib import ticker as mticker
     from mpl_finance import candlestick_ohlc
     import datetime as dt
-    df_copy = df.copy(deep=True)
+    df_copy = df.copy(deep = True)
     data = df_copy
     df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(dt.date))
     fig = plt.figure()
-    ax1 = plt.subplot2grid((1,1),(0,0))
+    ax1 = plt.subplot2grid((1,1), (0,0))
     plt.title(str(ticker) + ' Candlestick Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Candlestick Volume')
     ax1.xaxis.set_major_locator(mticker.MaxNLocator(6))
@@ -253,10 +261,12 @@ OPTIONS = [
 "Please Choose One Type of Graph",
 "Historical Prices",
 "Log Returns",
+"Cumulative Distribution Function",
 "Historical Volume",
 "Daily Volatility",
 "Value at Risk (VaR)",
 "Candlestick",
+"Point and Figure",
 "Max Drawdown Plot",
 "Momentum Oscillators"
 ] 
@@ -266,7 +276,7 @@ master.title("Select the type of data visualization")
 
 # Add a grid
 mainframe = Frame(master)
-mainframe.grid(column=0,row=0, sticky=(N,W,E,S) )
+mainframe.grid(column = 0, row = 0, sticky = (N,W,E,S) )
 mainframe.columnconfigure(0, weight = 1)
 mainframe.rowconfigure(0, weight = 1)
 mainframe.pack(pady = 100, padx = 200)
@@ -281,12 +291,12 @@ def ok():
     print ("\n Graph You Picked Is: " + variable.get())
     master.quit()
     
-button = Button(master, text="Visualize", command=ok)
+button = Button(master, text = "Visualize", command=ok)
 button.pack()
 
 mainloop()
 
-graph= variable.get()
+graph = variable.get()
 
 def draw_graph():
     if graph == OPTIONS[1]:
@@ -294,22 +304,16 @@ def draw_graph():
     elif graph == OPTIONS[2]:
         plot_log_returns(df)
     elif graph == OPTIONS[3]:
-        plot_historical_volume(df)
+        plot_cdf(df)
     elif graph == OPTIONS[4]:
-        plot_daily_volatility(df)
+        plot_historical_volume(df)
     elif graph == OPTIONS[5]:
-        plot_Value_at_Risk(df)
+        plot_daily_volatility(df)
     elif graph == OPTIONS[6]:
+        plot_Value_at_Risk(df)
+    elif graph == OPTIONS[7]:
         plot_candlestick(df)
+    elif graph == OPTIONS[8]:
+        plot_Point_and_Figure(df)
+        
 draw_graph()
-
-def plot_cdf(df):
-    plt.rcParams['figure.figsize'] = [20, 15]
-    start_date_price = df.iloc[0,5]
-    cum_return = (df['Adj Close']-start_date_price)/start_date_price
-    plt.plot(df['Date'],cum_return)
-    plt.title(' Cumulative Return of ' + str(ticker) + ' from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Cumulative Return')
-    plt.xlabel('Date')
-    plt.show()
-plot_cdf(df)   
