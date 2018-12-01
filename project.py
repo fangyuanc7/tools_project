@@ -33,7 +33,7 @@ from tkinter import *
 def user_input():
     while True:
         try:
-            ticker = input("What equity would you like to analyze? ")
+            ticker = input("What equity would you like to analyze? Please enter the ticker name (case insensitive).")
             url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
             response = requests.get(url, verify=False)
             other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
@@ -252,6 +252,24 @@ def plot_candlestick(df):
 
 # plot_candlestick(df)
 
+def plot_max_drawdown(df):
+    df_copy = df.copy(deep = True)
+    Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
+# print(Roll_Max)
+    Daily_Drawdown = df_copy['Adj Close']/Roll_Max - 1.0
+# print(Daily_Drawdown)
+    Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min()
+# print(Max_Daily_Drawdown)
+    plt.rcParams['figure.figsize'] = [15, 10]
+    plt.ylim(-1, 0.1)
+    plt.xlim(start_, end_)
+    plt.plot(df_copy['Date'], Max_Daily_Drawdown)
+    plt.title(str(ticker) + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Max_Daily_Drawdown')
+    plt.xlabel('Date')
+    plt.show()
+# plot_max_drawdown(df)
+
 #create a dropdown menu for the graphs display based on user selection
 OPTIONS = [
 "Please Choose One Type of Graph",
@@ -285,7 +303,7 @@ w.pack()
 
 def ok():
     print ("\n Graph You Picked Is: " + variable.get())
-    master.quit()
+#     master.quit()
     
 button = Button(master, text = "Visualize", command = ok)
 button.pack()
@@ -311,5 +329,7 @@ def draw_graph():
         plot_candlestick(df)
     elif graph == OPTIONS[8]:
         plot_Point_and_Figure(df)
+    elif graph == OPTIONS[9]:
+        plot_max_drawdown(df)
         
 draw_graph()
