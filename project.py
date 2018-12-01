@@ -1,4 +1,4 @@
-!pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+# pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 # !pip install tabulate
 # !pip install numpy
 # !pip install pandas
@@ -84,17 +84,24 @@ def plot_historical_prices(df):
     long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
     upper_band = long_rolling + (long_rolling_std*1.5)
     lower_band = long_rolling - (long_rolling_std*1.5)
-    ema_short = df['Adj Close'].ewm(span = 20, adjust = False).mean()
+    # ema_short = df['Adj Close'].ewm(span = 20, adjust = False).mean()
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
     plt.xlabel('Date')
-    plt.plot(df['Date'], ema_short, label = 'Span 20-days EMA')
+    # plt.plot(df['Date'], ema_short, label = 'Span 20-days EMA')
     plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
     plt.plot(df['Date'], upper_band, label = 'Upper Band')
     plt.plot(df['Date'], lower_band, label = 'Lower Band') 
     plt.legend(loc = 'best')
     plt.show()
-
+    description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
+    description +=' out the “noise” from random price fluctuations.'
+    description += 'It is a trend-following, or lagging, indicator because it is based on past prices.'
+    print(description)
+    d2 = 'A Bollinger Band is a set of lines plotted two standard deviations (positively and negatively) away from a simple moving'
+    d2 += "average of the security's price. It is normally plotted two standard deviations away from a simple moving average"
+    print(d2)
+    
 def plot_log_returns(df):
     df_copy = df.copy(deep = True)
     df_copy = df_copy.iloc[1:]
@@ -138,6 +145,11 @@ def plot_daily_volatility(df):
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
     plt.show()
+    description = 'Daily changes in a price of a good or service based on imbalances between the supply and demand.'
+    description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause panic
+    description += 'and drive prices up when there is fear of too few sellers compared to buyers.'
+    print(description)
+    
     
 def plot_Value_at_Risk(df):
     pd.options.mode.chained_assignment = None
@@ -249,6 +261,11 @@ def plot_candlestick(df):
     plt.ylabel('Price')
     plt.xlabel('Date')
     plt.show()
+    description = 'A candlestick is a type of price chart that displays the high, low, open and closing prices of a security'
+    description += ' for a specific period. The wide part of the candlestick is called the "real body" '
+    description += 'and tells investors whether the closing price was higher or lower than the opening price '
+    description += 'with red if the stock closed lower, orange if the stock closed higher.'
+    print(description)
 
 # plot_candlestick(df)
 
