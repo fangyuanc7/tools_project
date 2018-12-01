@@ -7,6 +7,7 @@
 # !pip install bs4
 # !pip install datetime
 # !pip install matplotlib.pylot
+# !pip install matplotlib.dates
 # !pip install pandas_datareader.data
 # !pip install fix_yahoo_finance
 # !pip install seaborn
@@ -79,10 +80,10 @@ def user_input():
 
 start_, end_, ticker = user_input()
 
-print("Analyzing " + str(ticker) + " between the dates of " + str(start_) + " and " + str(end_) + ": ")
+print("Analyzing " + str(ticker) + " between the dates of " + str(start_)[0:10] + " and " + str(end_)[0:10] + ": ")
 df = web.DataReader([ticker], 'yahoo', start_, end_)
 df['Date'] = df.index.values
-print(df.head(10))
+#print(df.head(10))
 
 def plot_historical_prices(df):
     '''
@@ -108,7 +109,7 @@ def plot_historical_prices(df):
     plt.show()
     
     description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
-    description +=' out the “noise” from random price fluctuations.'
+    description +=' out the “noise” from random price fluctuations. '
     description += 'It is a trend-following, or lagging, indicator because it is based on past prices.'
     print(description)
     
@@ -143,6 +144,10 @@ def plot_log_returns(df):
     print(description)
     
 def plot_cdf(df):
+    '''
+    CDF DOCSTRING HERE
+    '''
+    
     plt.rcParams['figure.figsize'] = [20, 15]
     start_date_price = df.iloc[0, 5]
     cum_return = (df['Adj Close']-start_date_price)/start_date_price
@@ -151,7 +156,10 @@ def plot_cdf(df):
     plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
     plt.show()
-
+    
+    description = "CDF DESCRIPTION HERE"
+    print(description)
+    
 def plot_historical_volume(df):
     '''
     Takes in dataframe with time-series stock closing prices, and returns a graph with the historical trading volume.
@@ -170,6 +178,10 @@ def plot_historical_volume(df):
     print(description)
     
 def plot_daily_volatility(df):
+    '''
+    Takes in dataframe with interday high and low prices and returns a plot with daily volatility.
+    '''
+    
     df_copy = df.copy(deep = True)
     df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
     plt.rcParams['figure.figsize'] = [20, 15]
@@ -182,7 +194,7 @@ def plot_daily_volatility(df):
     plt.show()
     
     description = 'Daily changes in a price of a good or service based on imbalances between the supply and demand.'
-    description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause panic
+    description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause panic'
     description += 'and drive prices up when there is fear of too few sellers compared to buyers.'
     print(description)
     
@@ -218,8 +230,8 @@ def plot_Value_at_Risk(df):
     description = "This Value at Risk curve shows the user the potential risk and volatility of the input stock. "
     description += "VaR helps answer the question of 'Within a specific confidence level, how much money could I lose "
     description += "in this investment?' The table above shows that, within a 90, 95, and 99 percentile confidence " 
-    description += "level, the user by investing in the input stock could expect to, in a worst case scenario, lose"
-    descirption += "up to the respective percentage level."
+    description += "level, the user by investing in the input stock could expect to, in a worst case scenario, lose "
+    description += "up to the respective percentage level."
 
     print(description)
     
@@ -229,7 +241,6 @@ def plot_Point_and_Figure(df):
     '''
     
     BOX = 2
-    #START = 300
     START = df['Adj Close'].iloc[0]
     df_copy = df.copy(deep = True)    
     df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
@@ -271,7 +282,7 @@ def plot_Point_and_Figure(df):
     description += "changes in direction. Any up movements of a significant amount are charted as an 'X', and any "
     description += "down movements of a significant amount are charted as an 'O'. There are several advantages to "
     description += "using a P&F Chart, such as filtering out insignificant price movements and noise, as well as " 
-    descirption += "allowing the user to distinguish support and resistance levels for the stock.")
+    description += "allowing the user to distinguish support and resistance levels for the stock."
         
     print(description)
     
@@ -291,6 +302,10 @@ from mpl_finance import candlestick_ohlc
 import matplotlib.pyplot as plt
 
 def plot_candlestick(df):
+    '''
+    CANDLESTICK DOCSTRING HERE
+    '''
+    
     from matplotlib import dates as mdates
     from matplotlib import ticker as mticker
     from mpl_finance import candlestick_ohlc
@@ -303,7 +318,7 @@ def plot_candlestick(df):
     plt.title(str(ticker) + ' Candlestick Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Candlestick Volume')
     ax1.xaxis.set_major_locator(mticker.MaxNLocator(6))
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d')) #date axis not formatted
     p = candlestick_ohlc(ax1, df_copy.values, width=0.2)
     dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index = False)]
     fig = plt.figure()
@@ -344,11 +359,13 @@ def plot_max_drawdown(df):
     plt.ylabel('Max_Daily_Drawdown')
     plt.xlabel('Date')
     plt.show()
+    
     description = "A maximum drawdown (MDD) is the maximum loss from a peak to a trough of a portfolio, "
     description += "before a new peak is attained. \nMaximum Drawdown (MDD) is an indicator of downside risk over a specified time period. "
     description += "\nMDD = (Trough Value – Peak Value) ÷ Peak Value"
     description += "\nIn this graph, it shows a rolling window of 7 days of daily maximum drawdown, given the time period provided by user."
     print(description)
+    
 # plot_max_drawdown(df)
 
 #create a dropdown menu for the graphs display based on user selection
@@ -363,7 +380,7 @@ OPTIONS = [
 "Candlestick",
 "Point and Figure",
 "Max Drawdown Plot",
-"Momentum Oscillators"
+"Momentum Oscillators" #Add or remove
 ] 
 
 master = Tk()
