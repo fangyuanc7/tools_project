@@ -36,20 +36,31 @@ def user_input():
     Main function where user inputs stock ticker and time periods for analysis and data visualization. 
     '''
     
+    ticker_list = []
     while True:
-        try:
-            ticker = input("What equity would you like to analyze? Please enter the ticker name (Case Insensitive): ")
-            url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
-            response = requests.get(url, verify=False)
-            other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
-            summary_json_response = requests.get(other_details_json_link)
-            if not summary_json_response.status_code == 200:
-                raise ValueError
-            else:
-                break
-        except ValueError:
-            print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.')
-
+        while True:
+            try:
+                ticker = input("What equity would you like to analyze? Please enter the ticker name (Case Insensitive): ")
+                if ticker in ticker_list:
+                    raise IOError
+                url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
+            
+                response = requests.get(url, verify=False)
+                other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
+                summary_json_response = requests.get(other_details_json_link)
+                if not summary_json_response.status_code == 200:
+                    raise ValueError
+                else:
+                    ticker_list.append(ticker)
+                    break
+            except IOError:
+                print('\033[1m' + 'Please input a ticker different from previous tickers')
+            except ValueError:
+                print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.') 
+        input_again = input("Do you want to analyze another equity? Please enter YES or NO(Case Insensitive): ")
+        if input_again == 'NO' or input_again == 'no': 
+            break
+    
     while True:
         try:
             start = input("When would you like to begin analyzing? Please enter date in format YYYY/MM/DD: ")
@@ -75,8 +86,7 @@ def user_input():
                 print('\033[1m' + "Your input time is out of our data bounds, please input again")  
         except:
             print('\033[1m' + "Your input time is illegal, please input again")
-    
-    return start_date, end_date, ticker
+    return start_date, end_date, ticker_list
 
 start_, end_, ticker = user_input()
 
