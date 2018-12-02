@@ -29,7 +29,8 @@ from scipy.stats import norm
 import math
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from tkinter import *
+from ipywidgets import widgets
+from IPython.display import display
 
 def user_input():
     '''
@@ -408,34 +409,12 @@ OPTIONS = [
         "Relative Strength Index"
         ] 
 
-master = Tk()
-master.title("Select the type of data visualization")
+selection = widgets.Dropdown(description="Which graph would you like to see?")
+selection.options = OPTIONS
+display(selection)
 
-# Add a grid
-mainframe = Frame(master)
-mainframe.grid(column = 0, row = 0, sticky = (N,W,E,S) )
-mainframe.columnconfigure(0, weight = 1)
-mainframe.rowconfigure(0, weight = 1)
-mainframe.pack(pady = 100, padx = 200)
-
-variable = StringVar(master)
-variable.set(OPTIONS[0]) # default value
-
-w = OptionMenu(master, variable, *OPTIONS)
-w.pack()
-
-def confirm():
-    print ("\n Graph You Picked Is: " + variable.get())
-#     master.quit()
-    
-button = Button(master, text = "Visualize", command = confirm)
-button.pack()
-
-mainloop()
-
-graph = variable.get()
-
-def draw_graph():
+def on_button_clicked(b):
+    graph = selection.value
     if graph == OPTIONS[1]:
         plot_historical_prices(df)
     elif graph == OPTIONS[2]:
@@ -457,4 +436,7 @@ def draw_graph():
     elif graph == OPTIONS[10]:
         plot_Relative_Strength_Index(df)
         
-draw_graph()
+button = widgets.Button(description = "Visualize")
+display(button)
+
+button.on_click(on_button_clicked)
