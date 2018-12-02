@@ -91,15 +91,15 @@ def plot_historical_prices(df):
     
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+
     long_rolling =  df['Adj Close'].rolling(window = 15).mean()
     long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
     upper_band = long_rolling + (long_rolling_std * 1.5)
     lower_band = long_rolling - (long_rolling_std * 1.5)
-    # ema_short = df['Adj Close'].ewm(span = 20, adjust = False).mean()
+    
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
     plt.xlabel('Date')
-    # plt.plot(df['Date'], ema_short, label = 'Span 20-days EMA')
     plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
     plt.plot(df['Date'], upper_band, label = 'Upper Band')
     plt.plot(df['Date'], lower_band, label = 'Lower Band') 
@@ -109,10 +109,12 @@ def plot_historical_prices(df):
     description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
     description +=' out the “noise” from random price fluctuations. '
     description += 'It is a trend-following, or lagging, indicator because it is based on past prices.'
+    
     print(description)
     
     d2 = 'A Bollinger Band is a set of lines plotted two standard deviations (positively and negatively) away from a simple moving'
     d2 += "average of the security's price. It is normally plotted two standard deviations away from a simple moving average"
+    
     print(d2)
     
 def plot_log_returns(df):
@@ -143,9 +145,10 @@ def plot_log_returns(df):
     
 def plot_cdf(df):
     '''
-    CDF DOCSTRING HERE
+    Takes in dataframe with close prices and returns a Cumulative Distribution Function of returns.
     '''
     
+    ##Change to 1
     plt.rcParams['figure.figsize'] = [20, 15]
     start_date_price = df.iloc[0, 5]
     cum_return = (df['Adj Close']-start_date_price)/start_date_price
@@ -156,6 +159,7 @@ def plot_cdf(df):
     plt.show()
     
     description = "CDF DESCRIPTION HERE"
+    
     print(description)
     
 def plot_historical_volume(df):
@@ -192,10 +196,10 @@ def plot_daily_volatility(df):
     plt.show()
     
     description = 'Daily changes in a price of a good or service based on imbalances between the supply and demand.'
-    description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause panic'
-    description += 'and drive prices up when there is fear of too few sellers compared to buyers.'
-    print(description)
+    description += 'Current market conditions can greatly impact price of goods and high degrees of volatility can cause '
+    description += 'panic and drive prices up when there is fear of too few sellers compared to buyers.'
     
+    print(description)
     
 def plot_Value_at_Risk(df):
     '''
@@ -225,7 +229,7 @@ def plot_Value_at_Risk(df):
     print(tabulate([['90%', VaR_90perc], ['95%', VaR_95perc], ['99%', VaR_99perc]], 
                    headers = ['Confidence Level', 'Value at Risk']))
 
-    description = "This Value at Risk curve shows the user the potential risk and volatility of the input stock. "
+    description = "\nThis Value at Risk curve shows the user the potential risk and volatility of the input stock. "
     description += "VaR helps answer the question of 'Within a specific confidence level, how much money could I lose "
     description += "in this investment?' The table above shows that, within a 90, 95, and 99 percentile confidence " 
     description += "level, the user by investing in the input stock could expect to, in a worst case scenario, lose "
@@ -290,6 +294,9 @@ def plot_Point_and_Figure(df):
     print(description)
 
 def plot_Relative_Strength_Index(df):
+    '''
+    Takes in dataframe with close prices and returns a Relative Strength Index with two-week moving averages.
+    '''
     
     differences = df['Adj Close'].diff()
     window_length = 14
@@ -308,27 +315,26 @@ def plot_Relative_Strength_Index(df):
     RSI.plot()
     plt.show()
     
-#PLOTTING HERE
-# plot_historical_prices(df)
-# plot_log_returns(df)
-# plot_cdf(df)   
-# plot_historical_volume(df)
-# plot_daily_volatility(df)
-# plot_Value_at_Risk(df)
-# plot_Point_and_Figure(df)
-# plot_plot_Relative_Strength_Index(df)
-
-from datetime import datetime, timedelta
-import matplotlib.dates as mdates
-from matplotlib.pyplot import subplots, draw
-from mpl_finance import candlestick_ohlc
-import matplotlib.pyplot as plt
+    description = "The Relative Strength Index (RSI) is a momentum indicator that utilizes the magnitude of "
+    description += "recent price movements to evaluate whether the asset is overbought or oversold. A RSI value "
+    description += "above 70 is generally correlated with an overbought security, indicating potential downtrends "
+    description += "in the future. Similarly, an RSI below 30 is generally correlated with an oversold security, "
+    description += "indicating a potential uptick soon. RSI can be utilized with the other analysis chart tools "
+    description += "for the user to gauge the overall market sentiment toward the security. Rolling window "
+    description += "length used is typically 2 weeks, but this is user changeable."
+    
+    print(description)
 
 def plot_candlestick(df):
     '''
-    CANDLESTICK DOCSTRING HERE
+    Takes in dataframe with Date, Open, Close, High, Low values and returns candlestick technical charts.
     '''
     
+    from datetime import datetime, timedelta
+    import matplotlib.dates as mdates
+    from matplotlib.pyplot import subplots, draw
+    from mpl_finance import candlestick_ohlc
+    import matplotlib.pyplot as plt
     from matplotlib import dates as mdates
     from matplotlib import ticker as mticker
     from mpl_finance import candlestick_ohlc
@@ -360,8 +366,6 @@ def plot_candlestick(df):
     
     print(description)
 
-# plot_candlestick(df)
-
 def plot_max_drawdown(df):
     '''
     Takes in dataframe with high and low stock price, and returns a max daily drawdown plot with rolling window of 7.
@@ -369,11 +373,8 @@ def plot_max_drawdown(df):
     
     df_copy = df.copy(deep = True)
     Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
-# print(Roll_Max)
     Daily_Drawdown = df_copy['Adj Close']/Roll_Max - 1.0
-# print(Daily_Drawdown)
     Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min()
-# print(Max_Daily_Drawdown)
     plt.rcParams['figure.figsize'] = [15, 10]
     plt.ylim(-1, 0.1)
     plt.xlim(start_, end_)
@@ -387,25 +388,23 @@ def plot_max_drawdown(df):
     description += "before a new peak is attained. \nMaximum Drawdown (MDD) is an indicator of downside risk over a specified time period. "
     description += "\nMDD = (Trough Value – Peak Value) ÷ Peak Value"
     description += "\nIn this graph, it shows a rolling window of 7 days of daily maximum drawdown, given the time period provided by user."
-    print(description)
     
-# plot_max_drawdown(df)
+    print(description)
 
 #create a dropdown menu for the graphs display based on user selection
 OPTIONS = [
-"Please Choose One Type of Graph",
-"Historical Prices",
-"Log Returns",
-"Cumulative Distribution Function",
-"Historical Volume",
-"Daily Volatility",
-"Value at Risk (VaR)",
-"Candlestick",
-"Point and Figure",
-"Max Drawdown Plot",
-"Relative Strength Index",
-"Momentum Oscillators" #Add or remove
-] 
+        "Please Choose One Type of Graph",
+        "Historical Prices",
+        "Log Returns",
+        "Cumulative Distribution Function",
+        "Historical Volume",
+        "Daily Volatility",
+        "Value at Risk (VaR)",
+        "Candlestick",
+        "Point and Figure",
+        "Max Drawdown Plot",
+        "Relative Strength Index"
+        ] 
 
 master = Tk()
 master.title("Select the type of data visualization")
@@ -423,11 +422,11 @@ variable.set(OPTIONS[0]) # default value
 w = OptionMenu(master, variable, *OPTIONS)
 w.pack()
 
-def ok():
+def confirm():
     print ("\n Graph You Picked Is: " + variable.get())
 #     master.quit()
     
-button = Button(master, text = "Visualize", command = ok)
+button = Button(master, text = "Visualize", command = confirm)
 button.pack()
 
 mainloop()
