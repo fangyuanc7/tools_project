@@ -207,14 +207,18 @@ def plot_daily_volatility(df):
     '''
     Takes in dataframe with interday high and low prices and returns a plot with daily volatility.
     '''
-    
-    df_copy = df.copy(deep = True)
-    df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
-    plt.rcParams['figure.figsize'] = [20, 15]
-    plt.ylim(-.2, .2)
-    plt.xlim(start_, end_)
-    plt.plot(df_copy['Date'], df_copy['Daily Volatility'])
-    plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
+        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.ylim(-.2, .2)
+        plt.xlim(start_, end_)
+        plt.plot(df_copy['Date'], df_copy['Daily Volatility'], label = tickers[i])
+        if len(tickers) == 1: 
+            plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        elif len(tickers) >= 1:
+            string = ' & '.join(tickers)
+            plt.title(string + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
     plt.show()
@@ -361,7 +365,6 @@ def plot_candlestick(df):
     import matplotlib.pyplot as plt
     from matplotlib import dates as mdates
     from matplotlib import ticker as mticker
-    from mpl_finance import candlestick_ohlc
     import datetime as dt
     df_copy = df.copy(deep = True)
     data = df_copy
