@@ -67,7 +67,12 @@ def user_input():
                 print('\033[1m' + 'Please input a ticker different from previous tickers')
             except ValueError:
                 print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.') 
-        input_again = input("Do you want to analyze another equity? Please enter YES or NO(Case Insensitive): ")
+        while True:
+            input_again = input("Do you want to analyze another equity? Please enter YES or NO(Case Insensitive): ")
+            if input_again in ['YES','NO','yes','no']:
+                break
+            else:
+                print('\033[1m' + 'Please enter YES or NO(Case Insensitive): ')
         if input_again == 'NO' or input_again == 'no': 
             break
     
@@ -156,15 +161,20 @@ def plot_log_returns(df):
     Takes in dataframe with time-series stock closing prices, and returns a plot with log returns.
     '''
 
-    df_copy = df.copy(deep = True)
-    df_copy = df_copy.iloc[1:]
-    df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
-    #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
-    plt.rcParams['figure.figsize'] = [20, 15]
-    plt.ylim(-.2, .2) 
-    plt.xlim(start_, end_)
-    plt.plot(df_copy['Date'], df_copy['Log Returns'])
-    plt.title(str(ticker) + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        df_copy = df_copy.iloc[1:]
+        df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
+        #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
+        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.ylim(-.2, .2) 
+        plt.xlim(start_, end_)
+        plt.plot(df_copy['Date'], df_copy['Log Returns'], label = tickers[i])
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Log Returns')
     plt.xlabel('Date')
     plt.show()
