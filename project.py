@@ -120,7 +120,7 @@ def plot_historical_prices(df):
     '''
     Takes in dataframe with time-series stock closing prices, and returns a plot with historical prices, 
     as well as a moving average curve and Bollinger Bands attached.
-    '''
+   '''
   
     plt.rcParams['figure.figsize'] = [20, 15]
     plt.plot(df['Date'], df['Adj Close'], label = 'Price')
@@ -224,11 +224,11 @@ def plot_daily_volatility(df):
         plt.ylim(-.2, .2)
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], df_copy['Daily Volatility'], label = tickers[i])
-        if len(tickers) == 1: 
-            plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-        elif len(tickers) >= 1:
-            string = ' & '.join(tickers)
-            plt.title(string + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
     plt.show()
