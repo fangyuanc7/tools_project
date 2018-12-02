@@ -1,13 +1,12 @@
 # pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
-# !pip install tabulate
 # !pip install numpy
 # !pip install pandas
 # !pip install requests
-# !pip install bs4
 # !pip install datetime
 # !pip install matplotlib.pylot
 # !pip install pandas_datareader.data
 # !pip install fix_yahoo_finance
+# !pip install tabulate
 # !pip install seaborn
 # !pip install scipy.stats
 # !pip install math
@@ -16,9 +15,12 @@
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 import datetime
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib import ticker as mticker
+from matplotlib.pyplot import subplots, draw
+from mpl_finance import candlestick_ohlc
 import pandas_datareader.data as web
 import fix_yahoo_finance as yf
 from tabulate import tabulate
@@ -373,43 +375,28 @@ def plot_Relative_Strength_Index(df):
     
     print(description)
 
-def plot_candlestick(df):
-    '''
-    Takes in dataframe with Date, Open, Close, High, Low values and returns candlestick technical charts.
-    '''
-    
-    from datetime import datetime, timedelta
-    import matplotlib.dates as mdates
-    from matplotlib.pyplot import subplots, draw
-    from mpl_finance import candlestick_ohlc
-    import matplotlib.pyplot as plt
-    from matplotlib import dates as mdates
-    from matplotlib import ticker as mticker
-    import datetime as dt
+def plot_candlestick(df):   
     df_copy = df.copy(deep = True)
-    data = df_copy
-    df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(dt.date))
-    fig = plt.figure()
-    ax1 = plt.subplot2grid((1,1), (0,0))
-    plt.title(str(ticker) + ' Candlestick Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Candlestick Volume')
-    ax1.xaxis.set_major_locator(mticker.MaxNLocator(6))
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d')) #date axis not formatted
-    p = candlestick_ohlc(ax1, df_copy.values, width=0.2)
+    df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(datetime.date))
+    
+    plot_historical_volume(df)
+    
     dataAr = [tuple(x) for x in df_copy[['Date', 'Open', 'Close', 'High', 'Low']].to_records(index = False)]
     fig = plt.figure()
-    ax1 = plt.subplot(1,1,1)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    candlestick_ohlc(ax1, dataAr)
+    ax = plt.subplot(1, 1, 1)
+    candlestick_ohlc(ax, dataAr, width=0.4, colorup='#77d879', colordown='#db3f3f')
+    
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
     plt.title(str(ticker) + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Price')
+    plt.ylabel('Price') 
     plt.xlabel('Date')
     plt.show()
     
     description = 'A candlestick is a type of price chart that displays the high, low, open and closing prices of a security'
     description += ' for a specific period. The wide part of the candlestick is called the "real body" '
     description += 'and tells investors whether the closing price was higher or lower than the opening price '
-    description += 'with red if the stock closed lower, orange if the stock closed higher.'
+    description += 'with red if the stock closed lower, orange if the stock closed higher. This chart should be used '
+    description += 'in conjunction with the historical volume graph to better gauge market sentiment.'
     
     print(description)
 
