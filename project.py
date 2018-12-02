@@ -1,4 +1,4 @@
-## pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+# pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 # !pip install tabulate
 # !pip install numpy
 # !pip install pandas
@@ -97,11 +97,13 @@ start_, end_, tickers = user_input()
 #tickers_names += str(tickers[-1]).upper()
 #print(tickers_names)
     
+tickers_df_list = []   
 for ticker in tickers:
     ticker_name = str(ticker).upper()
     print("Analyzing " + ticker_name + " between the dates of " + str(start_)[0:10] + " and " + str(end_)[0:10] + ": ")
     df = web.DataReader([ticker], 'yahoo', start_, end_)
     df['Date'] = df.index.values
+    tickers_df_list.append(df)
     #print(df.head(10))
 
 def plot_historical_prices(df):
@@ -109,25 +111,24 @@ def plot_historical_prices(df):
     Takes in dataframe with time-series stock closing prices, and returns a plot with historical prices, 
     as well as a moving average curve and Bollinger Bands attached.
     '''
-    
-    for ticker in tickers:
-        plt.rcParams['figure.figsize'] = [20, 15]
-        plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+  
+    plt.rcParams['figure.figsize'] = [20, 15]
+    plt.plot(df['Date'], df['Adj Close'], label = 'Price')
 
-        long_rolling =  df['Adj Close'].rolling(window = 15).mean()
-        long_rolling_std = df['Adj Close'].rolling(window = 15).std() 
-        upper_band = long_rolling + (long_rolling_std * 1.5)
-        lower_band = long_rolling - (long_rolling_std * 1.5)
-        
-        ticker_name = str(ticker).upper()
-        plt.title(ticker_name + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-        plt.ylabel('Stock Value')
-        plt.xlabel('Date')
-        plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
-        plt.plot(df['Date'], upper_band, label = 'Upper Band')
-        plt.plot(df['Date'], lower_band, label = 'Lower Band') 
-        plt.legend(loc = 'best')
-        plt.show()
+    long_rolling =  df['Adj Close'].rolling(window = 15).mean()
+    long_rolling_std = df['Adj Close'].rolling(window = 15).std() 
+    upper_band = long_rolling + (long_rolling_std * 1.5)
+    lower_band = long_rolling - (long_rolling_std * 1.5)
+
+    ticker_name = str(ticker).upper()
+    plt.title(ticker_name + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.ylabel('Stock Value')
+    plt.xlabel('Date')
+    plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
+    plt.plot(df['Date'], upper_band, label = 'Upper Band')
+    plt.plot(df['Date'], lower_band, label = 'Lower Band') 
+    plt.legend(loc = 'best')
+    plt.show()
     
     description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
     description +=' out the “noise” from random price fluctuations. '
@@ -438,7 +439,8 @@ display(selection)
 def on_button_clicked(b):
     graph = selection.value
     if graph == OPTIONS[1]:
-        plot_historical_prices(df)
+        for i in tickers_df_list: 
+            plot_historical_prices(i)
     elif graph == OPTIONS[2]:
         plot_log_returns(df)
     elif graph == OPTIONS[3]:
