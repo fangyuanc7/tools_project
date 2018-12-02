@@ -9,7 +9,7 @@
 # !pip install pandas_datareader.data
 # !pip install fix_yahoo_finance
 # !pip install seaborn
-# !pip isntall scipy.stats
+# !pip install scipy.stats
 # !pip install math
 # !pip install urllib3
 # !pip install tkinter
@@ -67,7 +67,9 @@ def user_input():
             end_day = int(end_date[2])
             end_date = datetime.datetime(end_year, end_month, end_day)
             
-            if (datetime.datetime(1970,1,1) < start_date <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_date <= datetime.datetime.now()):
+            if start_date >= end_date:
+                print('\033[1m' + "Your start date must be earlier than end date, please input again")
+            elif (datetime.datetime(1970,1,1) < start_date <= datetime.datetime.now()) and (datetime.datetime(1970,1,1) < end_date <= datetime.datetime.now()):
                 break
             else:
                 print('\033[1m' + "Your input time is out of our data bounds, please input again")  
