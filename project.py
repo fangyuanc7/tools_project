@@ -130,7 +130,7 @@ def plot_historical_prices(df):
    '''
   
     plt.rcParams['figure.figsize'] = [20, 15]
-    plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+    plt.plot(df['Date'], df['Adj Close'], label = 'Price', linewidth=4)
 
     long_rolling =  df['Adj Close'].rolling(window = 15).mean()
     long_rolling_std = df['Adj Close'].rolling(window = 15).std() 
