@@ -193,20 +193,34 @@ def plot_cdf(df):
     '''
     Takes in dataframe with close prices and returns a Cumulative Distribution Function of returns.
     '''
+    dates = pd.date_range(start_, end_, freq='D')
+
+    options = [(date.strftime('%Y/%m/%d'), date) for date in dates]
+    index = (0, len(options)-1)
+
+    selection_range_slider = widgets.SelectionRangeSlider(
+        options=options,
+        index=index,
+        description='Dates',
+        orientation='horizontal',
+        layout={'width': '600px'}
+    )
+#     selection_range_slider
     
     ##Change to 1
-    plt.rcParams['figure.figsize'] = [20, 15]
+    f_copy = df.copy(deep = True) 
+    plt.rcParams['figure.figsize'] = [10, 8]
     start_date_price = df.iloc[0, 5]
     cum_return = (df['Adj Close']-start_date_price)/start_date_price
     plt.plot(df['Date'],cum_return)
     plt.title(' Cumulative Return of ' + str(ticker) + ' from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
-    plt.show()
-    
+    cdf = plt.show()
+
     description = "CDF description"
-    
     print(description)
+    return selection_range_slider
     
 def plot_historical_volume(df):
     '''
