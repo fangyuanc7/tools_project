@@ -275,28 +275,44 @@ def plot_Value_at_Risk(df):
     Takes in dataframe with time-series stock closing prices, and returns a Value at Risk curve.
     '''
     
+    header = ['Confidence Level']
+    perc90 = ['90%']
+    perc95 = ['95%']
+    perc99 = ['99%']
+    
     pd.options.mode.chained_assignment = None
-    
-    df = df[['Close']]
-    df['Returns'] = df.Close.pct_change()
-    mean = np.mean(df['Returns'])
-    std = np.std(df['Returns'])
-    
-    df['Returns'].hist(bins = 40, histtype = 'bar', alpha = 1)
-    x = np.linspace(mean - 3*std, mean + 3*std, 100)
-    plt.rcParams['figure.figsize'] = [10, 5]
-    plt.plot(x, scipy.stats.norm.pdf(x, mean, std), "r")
-    plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        df_copy = df_copy[['Close']]
+        df_copy['Returns'] = df_copy.Close.pct_change()
+        mean = np.mean(df_copy['Returns'])
+        std = np.std(df_copy['Returns'])
+
+        df_copy['Returns'].hist(bins = 40, histtype = 'bar', alpha = 1)
+        x = np.linspace(mean - 3*std, mean + 3*std, 100)
+        plt.rcParams['figure.figsize'] = [10, 15]
+        plt.plot(x, scipy.stats.norm.pdf(x, mean, std), "r")
+        
+        ticker_name = 'Value at Risk of ' + str(tickers[i]).upper()
+        header.append(ticker_name)
+        
+        VaR_90perc = norm.ppf(.1, mean, std)
+        VaR_95perc = norm.ppf(.05, mean, std)
+        VaR_99perc = norm.ppf(.01, mean, std)
+        perc90.append(VaR_90perc)
+        perc95.append(VaR_95perc)
+        perc99.append(VaR_99perc)
+        
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Frequency')
     plt.xlabel('Returns')
     plt.show()
     
-    VaR_90perc = norm.ppf(.1, mean, std)
-    VaR_95perc = norm.ppf(.05, mean, std)
-    VaR_99perc = norm.ppf(.01, mean, std)
-    
-    print(tabulate([['90%', VaR_90perc], ['95%', VaR_95perc], ['99%', VaR_99perc]], 
-                   headers = ['Confidence Level', 'Value at Risk']))
+    print(tabulate([perc90,perc95,perc99], headers = header))
 
     description = "\nThis Value at Risk curve shows the user the potential risk and volatility of the input stock. "
     description += "VaR helps answer the question of 'Within a specific confidence level, how much money could I lose "
