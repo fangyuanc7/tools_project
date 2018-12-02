@@ -88,12 +88,21 @@ def user_input():
             print('\033[1m' + "Your input time is illegal, please input again")
     return start_date, end_date, ticker_list
 
-start_, end_, ticker = user_input()
+start_, end_, tickers = user_input()
 
-print("Analyzing " + str(ticker) + " between the dates of " + str(start_)[0:10] + " and " + str(end_)[0:10] + ": ")
-df = web.DataReader([ticker], 'yahoo', start_, end_)
-df['Date'] = df.index.values
-#print(df.head(10))
+#tickers_names = ''
+#for ticker in tickers[:-1]:
+#    ticker_name = str(ticker).upper()
+#    tickers_names +  ticker_name + 'and'
+#tickers_names += str(tickers[-1]).upper()
+#print(tickers_names)
+    
+for ticker in tickers:
+    ticker_name = str(ticker).upper()
+    print("Analyzing " + ticker_name + " between the dates of " + str(start_)[0:10] + " and " + str(end_)[0:10] + ": ")
+    df = web.DataReader([ticker], 'yahoo', start_, end_)
+    df['Date'] = df.index.values
+    #print(df.head(10))
 
 def plot_historical_prices(df):
     '''
