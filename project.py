@@ -12,7 +12,6 @@
 # !pip install scipy.stats
 # !pip install math
 # !pip install urllib3
-# !pip install tkinter
 
 import numpy as np
 import pandas as pd
@@ -161,7 +160,7 @@ def plot_cdf(df):
     plt.xlabel('Date')
     plt.show()
     
-    description = "CDF DESCRIPTION HERE"
+    description = "CDF description"
     
     print(description)
     
@@ -409,9 +408,11 @@ OPTIONS = [
         "Relative Strength Index"
         ] 
 
-selection = widgets.Dropdown(description="Which graph would you like to see?")
+selection = widgets.Dropdown(description="Pick Graph: ")
 selection.options = OPTIONS
 display(selection)
+
+#create a button that can plot user's desired graph(s) on command
 
 def on_button_clicked(b):
     graph = selection.value
