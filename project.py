@@ -1,13 +1,11 @@
-# pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+## pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 # !pip install tabulate
 # !pip install numpy
 # !pip install pandas
 # !pip install requests
-# !pip install requests
 # !pip install bs4
 # !pip install datetime
 # !pip install matplotlib.pylot
-# !pip install matplotlib.dates
 # !pip install pandas_datareader.data
 # !pip install fix_yahoo_finance
 # !pip install seaborn
@@ -40,7 +38,7 @@ def user_input():
     
     while True:
         try:
-            ticker = input("What equity would you like to analyze? Please enter the ticker name (case insensitive).")
+            ticker = input("What equity would you like to analyze? Please enter the ticker name (Case Insensitive): ")
             url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
             response = requests.get(url, verify=False)
             other_details_json_link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{0}?formatted=true&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com".format(ticker)
@@ -95,8 +93,8 @@ def plot_historical_prices(df):
     plt.plot(df['Date'], df['Adj Close'], label = 'Price')
     long_rolling =  df['Adj Close'].rolling(window = 15).mean()
     long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
-    upper_band = long_rolling + (long_rolling_std*1.5)
-    lower_band = long_rolling - (long_rolling_std*1.5)
+    upper_band = long_rolling + (long_rolling_std * 1.5)
+    lower_band = long_rolling - (long_rolling_std * 1.5)
     # ema_short = df['Adj Close'].ewm(span = 20, adjust = False).mean()
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
@@ -290,6 +288,25 @@ def plot_Point_and_Figure(df):
     description += "allowing the user to distinguish support and resistance levels for the stock."
         
     print(description)
+
+def plot_Relative_Strength_Index(df):
+    
+    differences = df['Adj Close'].diff()
+    window_length = 14
+    
+    days_up = differences.copy()
+    days_up[differences <= 0] = 0.0
+    days_down = abs(differences.copy())
+    days_down[differences > 0] = 0.0
+    
+    rolling_up = days_up.rolling(window_length).mean()
+    rolling_down = days_down.rolling(window_length).mean()
+    
+    RSI = 100 - (100/(1+(rolling_up / rolling_down)))
+    
+    plt.figure()
+    RSI.plot()
+    plt.show()
     
 #PLOTTING HERE
 # plot_historical_prices(df)
@@ -299,6 +316,7 @@ def plot_Point_and_Figure(df):
 # plot_daily_volatility(df)
 # plot_Value_at_Risk(df)
 # plot_Point_and_Figure(df)
+# plot_plot_Relative_Strength_Index(df)
 
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
@@ -385,6 +403,7 @@ OPTIONS = [
 "Candlestick",
 "Point and Figure",
 "Max Drawdown Plot",
+"Relative Strength Index",
 "Momentum Oscillators" #Add or remove
 ] 
 
@@ -434,5 +453,7 @@ def draw_graph():
         plot_Point_and_Figure(df)
     elif graph == OPTIONS[9]:
         plot_max_drawdown(df)
+    elif graph == OPTIONS[10]:
+        plot_Relative_Strength_Index(df)
         
 draw_graph()
