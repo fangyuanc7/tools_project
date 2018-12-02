@@ -1,0 +1,19 @@
+## Here are the packages necessary for using our program:
+
+- https://github.com/matplotlib/mpl_finance/archive/master.zip
+- tabulate
+- numpy
+- pandas
+- requests
+- bs4
+- datetime
+- matplotlib.pylot
+- pandas_datareader.data
+- fix_yahoo_finance
+- seaborn
+- scipy.stats
+- math
+- urllib3
+- tkinter
+
+They can be installed using pip install or other installation methods on your local machine.
