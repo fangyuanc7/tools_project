@@ -467,7 +467,8 @@ def on_button_clicked(b):
     elif graph == OPTIONS[6]:
         plot_Value_at_Risk(df)
     elif graph == OPTIONS[7]:
-        plot_candlestick(df)
+        for i in tickers_df_list: 
+            plot_candlestick(i)
     elif graph == OPTIONS[8]:
         plot_Point_and_Figure(df)
     elif graph == OPTIONS[9]:
