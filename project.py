@@ -275,6 +275,11 @@ def plot_Point_and_Figure(df):
     plt.title(str(ticker) + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Price')
     plt.xlabel('Frequency')
+    #ax = fig.gca()
+    #print(df_copy['Low'].min()[0])
+    #ax.set_xticks(np.arange(0, len(df_copy['Low']), 2))
+    #ax.set_yticks(np.arange(df_copy['Low'].min()[0]-10, df_copy['High'].max()[0]+10, 2))
+    #plt.grid()
     plt.show()  
     
     description = "Point and Figure charts allow the user to identify significant changes in the price. Instead of the "
