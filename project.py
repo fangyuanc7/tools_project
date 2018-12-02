@@ -110,22 +110,24 @@ def plot_historical_prices(df):
     as well as a moving average curve and Bollinger Bands attached.
     '''
     
-    plt.rcParams['figure.figsize'] = [20, 15]
-    plt.plot(df['Date'], df['Adj Close'], label = 'Price')
+    for ticker in tickers:
+        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.plot(df['Date'], df['Adj Close'], label = 'Price')
 
-    long_rolling =  df['Adj Close'].rolling(window = 15).mean()
-    long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
-    upper_band = long_rolling + (long_rolling_std * 2)
-    lower_band = long_rolling - (long_rolling_std * 2)
-    
-    plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Stock Value')
-    plt.xlabel('Date')
-    plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
-    plt.plot(df['Date'], upper_band, label = 'Upper Band')
-    plt.plot(df['Date'], lower_band, label = 'Lower Band') 
-    plt.legend(loc = 'best')
-    plt.show()
+        long_rolling =  df['Adj Close'].rolling(window = 15).mean()
+        long_rolling_std = df['Adj Close'].rolling(window = 15).std() 
+        upper_band = long_rolling + (long_rolling_std * 1.5)
+        lower_band = long_rolling - (long_rolling_std * 1.5)
+        
+        ticker_name = str(ticker).upper()
+        plt.title(ticker_name + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.ylabel('Stock Value')
+        plt.xlabel('Date')
+        plt.plot(df['Date'], long_rolling, label = 'Simple Moving Avg')    
+        plt.plot(df['Date'], upper_band, label = 'Upper Band')
+        plt.plot(df['Date'], lower_band, label = 'Lower Band') 
+        plt.legend(loc = 'best')
+        plt.show()
     
     description ='A moving average is a widely used indicator in technical analysis that helps smooth out price action by filtering'
     description +=' out the “noise” from random price fluctuations. '
