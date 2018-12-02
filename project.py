@@ -94,8 +94,8 @@ def plot_historical_prices(df):
 
     long_rolling =  df['Adj Close'].rolling(window = 15).mean()
     long_rolling_std = df['Adj Close'].rolling(window = 15).std()    
-    upper_band = long_rolling + (long_rolling_std * 1.5)
-    lower_band = long_rolling - (long_rolling_std * 1.5)
+    upper_band = long_rolling + (long_rolling_std * 2)
+    lower_band = long_rolling - (long_rolling_std * 2)
     
     plt.title(str(ticker) + ' Price from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Stock Value')
