@@ -213,16 +213,21 @@ def plot_historical_volume(df):
     Takes in dataframe with time-series stock closing prices, and returns a graph with the historical trading volume.
     '''
     
-    plt.rcParams['figure.figsize'] = [20, 15]
-    plt.plot(df['Date'], df['Volume'])
-    plt.title(str(ticker) + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.plot(df_copy['Date'], df['Volume'], label = tickers[i] )
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Volume')
     plt.xlabel('Date')
     plt.show()
     
     description = "The historical trading volume shows how often the stock has been traded in the past and can be " 
-    description += "used in conjunction with the other graphs to examine the market sentiment and stock liquidity."
-    
+    description += "used in conjunction with the other graphs to examine the market sentiment and stock liquidity." 
     print(description)
     
 def plot_daily_volatility(df):
