@@ -40,6 +40,16 @@ def user_input():
     while True:
         while True:
             try:
+                example = """
+                        Here are some popular ticker names:
+                        Apple: AAPL,
+                        Amazon: AMZN,
+                        Netflix: NFLX,
+                        Alphabet Inc.: GOOG,
+                        Bank of America Corporation: BAC
+                        For more, click: https://finance.yahoo.com/trending-tickers
+                         """
+                print(example)
                 ticker = input("What equity would you like to analyze? Please enter the ticker name (Case Insensitive): ")
                 if ticker in ticker_list:
                     raise IOError
