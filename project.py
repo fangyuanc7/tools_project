@@ -1,4 +1,8 @@
-# pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+# first, run these two lines of codes in a seperate box 
+# %%javascript
+# IPython.OutputArea.auto_scroll_threshold = 9999;
+
+
 # pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 # !pip install numpy
 # !pip install pandas
@@ -47,7 +51,6 @@ def user_input():
                 example = """
                         Here are some popular ticker names:
                         Apple: AAPL,
-                        Amazon: AMZN,
                         Netflix: NFLX,
                         Alphabet Inc.: GOOG,
                         Bank of America Corporation: BAC
@@ -124,7 +127,7 @@ def plot_historical_prices(df):
     as well as a moving average curve and Bollinger Bands attached.
    '''
     for i in range(len(tickers_df_list)):
-        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.rcParams['figure.figsize'] = [10, 8]
         plt.plot(tickers_df_list[i]['Date'], tickers_df_list[i]['Adj Close'], label = 'Price', linewidth=4)
 
         long_rolling =  tickers_df_list[i]['Adj Close'].rolling(window = 15).mean()
@@ -153,7 +156,6 @@ def plot_historical_prices(df):
     
     print(d2)
     
-    
 def plot_log_returns(df):
     '''
     Takes in dataframe with time-series stock closing prices, and returns a plot with log returns.
@@ -164,7 +166,7 @@ def plot_log_returns(df):
         df_copy = df_copy.iloc[1:]
         df_copy['Log Returns'] = (np.log(df_copy['Adj Close']) - np.log(df_copy['Adj Close'].shift(1)))
         #df_copy['pct change'] = df_copy['Adj Close'].pct_change()
-        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.rcParams['figure.figsize'] = [10, 8]
         plt.ylim(-.2, .2) 
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], df_copy['Log Returns'], label = tickers[i])
@@ -175,6 +177,7 @@ def plot_log_returns(df):
         plt.title(string.upper() + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Log Returns')
     plt.xlabel('Date')
+    plt.legend()
     plt.show()
     
     description = "Rather than calculating the normal differences and returns, we present a lognormal returns "
@@ -192,10 +195,10 @@ def plot_cdf(df):
 
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
-        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.rcParams['figure.figsize'] = [10, 8]
         start_date_price = df_copy.iloc[0, 5]
         cum_return = (df_copy['Adj Close']-start_date_price)/start_date_price
-        plt.plot(df_copy['Date'],cum_return)
+        plt.plot(df_copy['Date'],cum_return,label=tickers[i])
     if len(tickers) == 1: 
         plt.title(str(ticker).upper() + ' Cumulative Return of '+ str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
@@ -203,13 +206,13 @@ def plot_cdf(df):
         plt.title(string.upper() + ' Cumulative Return of ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
+    plt.legend()
     plt.show()
     
     description = "A cumulative return is the aggregate amount an investment has gained or lost over time, "
     description += " independent of the period of time involved."
     print(description)
  
-    
 def plot_historical_volume(df):
     '''
     Takes in dataframe with time-series stock closing prices, and returns a graph with the historical trading volume.
@@ -217,7 +220,7 @@ def plot_historical_volume(df):
     
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
-        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.rcParams['figure.figsize'] = [10, 8]
         plt.plot(df_copy['Date'], df_copy['Volume'], label = tickers[i] )
     if len(tickers) == 1: 
         plt.title(str(ticker).upper() + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
@@ -226,6 +229,7 @@ def plot_historical_volume(df):
         plt.title(string.upper() + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Volume')
     plt.xlabel('Date')
+    plt.legend()
     plt.show()
     
     description = "The historical trading volume shows how often the stock has been traded in the past and can be " 
@@ -239,7 +243,7 @@ def plot_daily_volatility(df):
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
         df_copy['Daily Volatility'] =  (df_copy['High'] - df_copy['Low'])/(df_copy['High'] + df_copy['Low'])
-        plt.rcParams['figure.figsize'] = [20, 15]
+        plt.rcParams['figure.figsize'] = [10, 8]
         plt.ylim(-.2, .2)
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], df_copy['Daily Volatility'], label = tickers[i])
@@ -250,6 +254,7 @@ def plot_daily_volatility(df):
         plt.title(string.upper() + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
+    plt.legend()
     plt.show()
     
     description = 'Daily changes in a price of a good or service based on imbalances between the supply and demand.'
@@ -279,7 +284,7 @@ def plot_Value_at_Risk(df):
         df_copy['Returns'].hist(bins = 40, histtype = 'bar', alpha = 1)
         x = np.linspace(mean - 3*std, mean + 3*std, 100)
         plt.rcParams['figure.figsize'] = [10, 15]
-        plt.plot(x, scipy.stats.norm.pdf(x, mean, std), "r")
+        plt.plot(x, scipy.stats.norm.pdf(x, mean, std), label=tickers[i])
         
         ticker_name = 'Value at Risk of ' + str(tickers[i]).upper()
         header.append(ticker_name)
@@ -298,6 +303,7 @@ def plot_Value_at_Risk(df):
         plt.title(string.upper() + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Frequency')
     plt.xlabel('Returns')
+    plt.legend()
     plt.show()
     
     print(tabulate([perc90,perc95,perc99], headers = header))
@@ -352,11 +358,6 @@ def plot_Point_and_Figure(df):
         plt.ylabel('Price')
         plt.xlabel('Frequency')
   
-        #ax = fig.gca()
-        #print(df_copy['Low'].min()[0])
-        #ax.set_xticks(np.arange(0, len(df_copy['Low']), 2))
-        #ax.set_yticks(np.arange(df_copy['Low'].min()[0]-10, df_copy['High'].max()[0]+10, 2))
-        #plt.grid()
         plt.show()  
     
     description = "Point and Figure charts allow the user to identify significant changes in the price. Instead of the "
@@ -405,9 +406,11 @@ def plot_Relative_Strength_Index(df):
     description += "length used is typically 2 weeks, but this is user changeable."
     print(description)
 
-    
 def plot_candlestick(df): 
- 
+    '''
+    Takes in dataframe with date, open, close, high, low prices and returns candlestick technical charts.
+    '''
+    
     for i in range(len(tickers_df_list)): 
         df_copy = tickers_df_list[i].copy(deep = True)
         df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(datetime.date))
@@ -461,9 +464,10 @@ def plot_max_drawdown(df):
     description += "before a new peak is attained. \nMaximum Drawdown (MDD) is an indicator of downside risk over a specified time period. "
     description += "\nMDD = (Trough Value – Peak Value) ÷ Peak Value"
     description += "\nIn this graph, it shows a rolling window of 7 days of daily maximum drawdown, given the time period provided by user."
+    
     print(description)
 
-#create a dropdown menu for the graphs display based on user selection
+#Create a dropdown menu for the graphs display based on user selection
 OPTIONS = [
         "Choose One Type of Graph",
         "Historical Prices",
@@ -482,7 +486,7 @@ selection = widgets.Dropdown(description="Pick Graph: ")
 selection.options = OPTIONS
 display(selection)
 
-#create a button that can plot user's desired graph(s) on command
+#Create a button that can plot user's desired graph(s) on command
 def on_button_clicked(b):
     graph = selection.value
     if graph == OPTIONS[1]:
