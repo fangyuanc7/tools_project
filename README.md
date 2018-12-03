@@ -59,13 +59,28 @@ Here is an example walkthrough of using our tool:
 ![Run project.py](https://github.com/kkl2129/tools_project/blob/master/Pic1.png "Run project.py")
 
 2. The program will ask you what security you would like to analyze. Please input an equity ticker.
+![Input Ticker](https://github.com/kkl2129/tools_project/blob/master/pic2.png "Input Ticker")
 
-3. It will then ask if you want to analyze multiple tickers, or stick with only one.
+In this example, we look at Apple (AAPL).
+
+3. It will then ask if you want to analyze multiple tickers, or stick with only one. It will continue to ask
+until you reply "NO". We recommend no more than 3 securities for easier user interpretation.
+![Additional Input](https://github.com/kkl2129/tools_project/blob/master/pic3.png "Additional Input")
+
+In this example, we also look at Facebook (FB).
 
 4. The program will ask for a start and end date time period for which you want to analyze.
+![Input start date](https://github.com/kkl2129/tools_project/blob/master/pic4.png "Input start date")
+![Input end date](https://github.com/kkl2129/tools_project/blob/master/pic5.png "Input end date")
+
+In this example, we use 2015/01/01 and 2016/01/01.
 
 5. There will be a dropdown menu for you to select which data analysis tools you want to visualize.
+![Select tool](https://github.com/kkl2129/tools_project/blob/master/pic6.png "Select tool")
 
 6. Please pick one and click 'Visualize'. The graph will appear with a brief description of how to interpret the graph.
+![Log returns](https://github.com/kkl2129/tools_project/blob/master/pic7.png "Log returns")
+
+In this example, we look at the log returns graph.
 
 7. If you wish, you can continue to select different graphs and they will appear as well.
