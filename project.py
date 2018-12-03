@@ -383,19 +383,27 @@ def plot_Relative_Strength_Index(df):
     Takes in dataframe with close prices and returns a Relative Strength Index with two-week moving averages.
     '''
     
-    differences = df['Adj Close'].diff()
     window_length = 14
     
-    days_up = differences.copy()
-    days_up[differences <= 0] = 0.0
-    days_down = abs(differences.copy())
-    days_down[differences > 0] = 0.0
-    
-    rolling_up = days_up.rolling(window_length).mean()
-    rolling_down = days_down.rolling(window_length).mean()
-    
-    RSI = 100 - (100/(1+(rolling_up / rolling_down)))
-    
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        differences = df_copy['Adj Close'].diff()
+
+        days_up = differences.copy()
+        days_up[differences <= 0] = 0.0
+        days_down = abs(differences.copy())
+        days_down[differences > 0] = 0.0
+
+        rolling_up = days_up.rolling(window_length).mean()
+        rolling_down = days_down.rolling(window_length).mean()
+
+        RSI = 100 - (100/(1+(rolling_up / rolling_down)))
+        
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.figure()
     RSI.plot()
     plt.show()
