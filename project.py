@@ -435,18 +435,18 @@ def plot_max_drawdown(df):
     '''
     
     for i in range(len(tickers_df_list)):
-        df_copy = df.copy(deep = True)
+        df_copy = tickers_df_list[i].copy(deep = True)
         Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
         Daily_Drawdown = df_copy['Adj Close']/Roll_Max - 1.0
-        Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min()
-        plt.plot(df_copy['Date'], Max_Daily_Drawdown,label = tickers[i])
-    plt.rcParams['figure.figsize'] = [15, 10]
-    plt.ylim(-1, 0.1)
-    plt.xlim(start_, end_)
-       
-    if len(tickers) == 1: 
+        Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min() 
+        
+        plt.rcParams['figure.figsize'] = [15, 10]
+        plt.ylim(-1, 0.1)
+        plt.xlim(start_, end_)
+        plt.plot(df_copy['Date'], Max_Daily_Drawdown, label = tickers[i])  
+    if len(tickers) == 1:
         plt.title(str(ticker) + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    elif len(tickers) >= 1:
+    elif len(tickers) > 1:
         string = ' & '.join(tickers)
         plt.title(string + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Max_Daily_Drawdown')
