@@ -56,6 +56,7 @@ analysis.
 Here is an example walkthrough of using our tool:
 
 1. After cloning the repo, directly run project.py
+![Run project.py](C:/Users/liuku/Desktop/Tools for Analytics/Tools pics/Pic1.png "Run project.py")
 
 2. The program will ask you what security you would like to analyze. Please input an equity ticker.
 
