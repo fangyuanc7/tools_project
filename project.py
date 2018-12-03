@@ -68,7 +68,7 @@ def user_input():
             except IOError:
                 print('\033[1m' + 'Please input a ticker different from previous tickers')
             except ValueError:
-                print('\033[1m' + 'Please Input A Valid Ticker For Analysis. Please Try Again.') 
+                print('\033[1m' + 'Please Input A Valid Equity Ticker For Analysis. Please Try Again.') 
         while True:
             input_again = input("Do you want to analyze another equity? Please enter YES or NO(Case Insensitive): ")
             if input_again in ['YES','NO','yes','no']:
@@ -208,19 +208,26 @@ def plot_cdf(df):
 #     selection_range_slider
     
     ##Change to 1
-    f_copy = df.copy(deep = True) 
-    plt.rcParams['figure.figsize'] = [10, 8]
-    start_date_price = df.iloc[0, 5]
-    cum_return = (df['Adj Close']-start_date_price)/start_date_price
-    plt.plot(df['Date'],cum_return)
-    plt.title(' Cumulative Return of ' + str(ticker) + ' from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True)
+        plt.rcParams['figure.figsize'] = [20, 15]
+        start_date_price = df.iloc[0, 5]
+        cum_return = (df['Adj Close']-start_date_price)/start_date_price
+        plt.plot(df['Date'],cum_return)
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Cumulative Return of '+ str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Cumulative Return of ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
-    cdf = plt.show()
-
-    description = "CDF description"
+    plt.show()
+    
+    description = "A cumulative return is the aggregate amount an investment has gained or lost over time, "
+    description += " independent of the period of time involved."
     print(description)
     return selection_range_slider
+ 
     
 def plot_historical_volume(df):
     '''
@@ -440,15 +447,21 @@ def plot_max_drawdown(df):
     Takes in dataframe with high and low stock price, and returns a max daily drawdown plot with rolling window of 7.
     '''
     
-    df_copy = df.copy(deep = True)
-    Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
-    Daily_Drawdown = df_copy['Adj Close']/Roll_Max - 1.0
-    Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min()
+    for i in range(len(tickers_df_list)):
+        df_copy = df.copy(deep = True)
+        Roll_Max = df_copy['Adj Close'].rolling(window=7).max()
+        Daily_Drawdown = df_copy['Adj Close']/Roll_Max - 1.0
+        Max_Daily_Drawdown = Daily_Drawdown.rolling(window=7).min()
+        plt.plot(df_copy['Date'], Max_Daily_Drawdown,label = tickers[i])
     plt.rcParams['figure.figsize'] = [15, 10]
     plt.ylim(-1, 0.1)
     plt.xlim(start_, end_)
-    plt.plot(df_copy['Date'], Max_Daily_Drawdown)
-    plt.title(str(ticker) + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+       
+    if len(tickers) == 1: 
+        plt.title(str(ticker) + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    elif len(tickers) >= 1:
+        string = ' & '.join(tickers)
+        plt.title(string + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Max_Daily_Drawdown')
     plt.xlabel('Date')
     plt.show()
@@ -457,7 +470,6 @@ def plot_max_drawdown(df):
     description += "before a new peak is attained. \nMaximum Drawdown (MDD) is an indicator of downside risk over a specified time period. "
     description += "\nMDD = (Trough Value – Peak Value) ÷ Peak Value"
     description += "\nIn this graph, it shows a rolling window of 7 days of daily maximum drawdown, given the time period provided by user."
-    
     print(description)
 
 #create a dropdown menu for the graphs display based on user selection
