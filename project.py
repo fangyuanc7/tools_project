@@ -512,7 +512,8 @@ def on_button_clicked(b):
         for i in tickers_df_list: 
             plot_candlestick(i)
     elif graph == OPTIONS[8]:
-        plot_Point_and_Figure(df)
+        for i in tickers_df_list: 
+            plot_Point_and_Figure(i)
     elif graph == OPTIONS[9]:
         plot_max_drawdown(df)
     elif graph == OPTIONS[10]:
