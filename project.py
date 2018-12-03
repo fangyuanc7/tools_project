@@ -167,10 +167,10 @@ def plot_log_returns(df):
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], df_copy['Log Returns'], label = tickers[i])
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Log returns from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Log Returns')
     plt.xlabel('Date')
     plt.show()
@@ -195,10 +195,10 @@ def plot_cdf(df):
         cum_return = (df_copy['Adj Close']-start_date_price)/start_date_price
         plt.plot(df_copy['Date'],cum_return)
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Cumulative Return of '+ str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Cumulative Return of '+ str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Cumulative Return of ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Cumulative Return of ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Cumulative Return')
     plt.xlabel('Date')
     plt.show()
@@ -218,10 +218,10 @@ def plot_historical_volume(df):
         plt.rcParams['figure.figsize'] = [20, 15]
         plt.plot(df_copy['Date'], df_copy['Volume'], label = tickers[i] )
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Volume')
     plt.xlabel('Date')
     plt.show()
@@ -242,10 +242,10 @@ def plot_daily_volatility(df):
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], df_copy['Daily Volatility'], label = tickers[i])
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Daily Volatility from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Daily Volatility')
     plt.xlabel('Date')
     plt.show()
@@ -290,10 +290,10 @@ def plot_Value_at_Risk(df):
         perc99.append(VaR_99perc)
         
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Frequency')
     plt.xlabel('Returns')
     plt.show()
@@ -345,7 +345,7 @@ def plot_Point_and_Figure(df):
                    s = 100)   
 
     ax.set_xlim(0, len(df_copy['changes']) + 1)
-    plt.title(str(ticker) + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.title(str(ticker).upper() + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Price')
     plt.xlabel('Frequency')
     #ax = fig.gca()
@@ -385,10 +385,10 @@ def plot_Relative_Strength_Index(df):
         RSI = 100 - (100/(1+(rolling_up / rolling_down)))
         plt.plot(df_copy['Date'],RSI,label = tickers[i])
     if len(tickers) == 1: 
-        plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.figure()
     plt.show()
     
@@ -414,7 +414,7 @@ def plot_candlestick(df):
     candlestick_ohlc(ax, dataAr, width=0.4, colorup='#77d879', colordown='#db3f3f')
     
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    plt.title(str(ticker) + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+    plt.title(str(ticker).upper() + ' Candlestick Movement from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Price') 
     plt.xlabel('Date')
     plt.show()
@@ -443,10 +443,10 @@ def plot_max_drawdown(df):
         plt.xlim(start_, end_)
         plt.plot(df_copy['Date'], Max_Daily_Drawdown, label = tickers[i])  
     if len(tickers) == 1:
-        plt.title(str(ticker) + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(str(ticker).upper() + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) > 1:
         string = ' & '.join(tickers)
-        plt.title(string + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.title(string.upper() + ' Max_Daily_Drawdown from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.ylabel('Max_Daily_Drawdown')
     plt.xlabel('Date')
     plt.show()
