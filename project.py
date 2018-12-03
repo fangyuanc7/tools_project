@@ -12,6 +12,7 @@
 # !pip install scipy.stats
 # !pip install math
 # !pip install urllib3
+# !pip install ipywidgets
 
 import numpy as np
 import pandas as pd
@@ -459,7 +460,7 @@ def plot_max_drawdown(df):
 
 #create a dropdown menu for the graphs display based on user selection
 OPTIONS = [
-        "Please Choose One Type of Graph",
+        "Choose One Type of Graph",
         "Historical Prices",
         "Log Returns",
         "Cumulative Distribution Function",
