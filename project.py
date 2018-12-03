@@ -316,46 +316,48 @@ def plot_Point_and_Figure(df):
     '''
     
     BOX = 2
-    START = df['Adj Close'].iloc[0]
-    df_copy = df.copy(deep = True)    
-    df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
-    df_copy = df_copy.drop(df.index[0])
-    fig = plt.figure(figsize = (5, 10))
-    ax = fig.add_axes([1, 1, 2, 2])
+    for i in range(len(tickers_df_list)):
+        df_copy = tickers_df_list[i].copy(deep = True) 
+        START = df_copy['Adj Close'].iloc[0]
+        df_copy['changes'] = (df_copy['Adj Close'] - df_copy['Adj Close'].shift(1))
+        df_copy = df_copy.drop(df.index[0])
+        fig = plt.figure(figsize = (5, 10))
+        ax = fig.add_axes([1, 1, 2, 2])
 
-    def sign(val):
-        if val == 0:
-            return 0
-        else:
-            return (val / abs(val))
+        def sign(val):
+            if val == 0:
+                return 0
+            else:
+                return (val / abs(val))
 
-    change_points = []
-    for change in df_copy['changes']:
-        change_points += [sign(float(change))] * math.floor(abs(float(change)))
-        symbol = {-1:'o',
-                   0:'None',
-                   1:'x'}
+        change_points = []
+        for change in df_copy['changes']:
+            change_points += [sign(float(change))] * math.floor(abs(float(change)))
+            symbol = {-1:'o',
+                       0:'None',
+                       1:'x'}
 
-    change_start = START
-    for x_change, change in enumerate(df_copy['changes']):
-        x = [x_change + 1] * math.floor(abs(change))
-        y = [change_start + i * BOX * sign(float(change)) for i in range(math.floor(abs(change)))] 
-        change_start += BOX * sign(float(change)) * (math.floor(abs(change))-2)
-        ax.scatter(x, y,
-                   marker = symbol[sign(float(change))],
-                   c = 'blue', 
-                   s = 100)   
+        change_start = START
+        for x_change, change in enumerate(df_copy['changes']):
+            x = [x_change + 1] * math.floor(abs(change))
+            y = [change_start + i * BOX * sign(float(change)) for i in range(math.floor(abs(change)))] 
+            change_start += BOX * sign(float(change)) * (math.floor(abs(change))-2)
+            ax.scatter(x, y,
+                       marker = symbol[sign(float(change))],
+                       c = 'blue', 
+                       s = 100)   
 
-    ax.set_xlim(0, len(df_copy['changes']) + 1)
-    plt.title(str(ticker).upper() + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
-    plt.ylabel('Price')
-    plt.xlabel('Frequency')
-    #ax = fig.gca()
-    #print(df_copy['Low'].min()[0])
-    #ax.set_xticks(np.arange(0, len(df_copy['Low']), 2))
-    #ax.set_yticks(np.arange(df_copy['Low'].min()[0]-10, df_copy['High'].max()[0]+10, 2))
-    #plt.grid()
-    plt.show()  
+        ax.set_xlim(0, len(df_copy['changes']) + 1)
+        plt.title(str(tickers[i]).upper() + ' Point and Figure Chart from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
+        plt.ylabel('Price')
+        plt.xlabel('Frequency')
+  
+        #ax = fig.gca()
+        #print(df_copy['Low'].min()[0])
+        #ax.set_xticks(np.arange(0, len(df_copy['Low']), 2))
+        #ax.set_yticks(np.arange(df_copy['Low'].min()[0]-10, df_copy['High'].max()[0]+10, 2))
+        #plt.grid()
+        plt.show()  
     
     description = "Point and Figure charts allow the user to identify significant changes in the price. Instead of the "
     description += "horizontal axis representing time, as it does in many of the other plots, it instead represents "
