@@ -106,13 +106,6 @@ def user_input():
     return start_date, end_date, ticker_list
 
 start_, end_, tickers = user_input()
-
-#tickers_names = ''
-#for ticker in tickers[:-1]:
-#    ticker_name = str(ticker).upper()
-#    tickers_names +  ticker_name + 'and'
-#tickers_names += str(tickers[-1]).upper()
-#print(tickers_names)
     
 tickers_df_list = []   
 for ticker in tickers:
@@ -237,7 +230,7 @@ def plot_historical_volume(df):
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
         plt.rcParams['figure.figsize'] = [20, 15]
-        plt.plot(df_copy['Date'], df['Volume'], label = tickers[i] )
+        plt.plot(df_copy['Date'], df_copy['Volume'], label = tickers[i] )
     if len(tickers) == 1: 
         plt.title(str(ticker) + ' Volume from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
