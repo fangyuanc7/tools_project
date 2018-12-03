@@ -1,4 +1,5 @@
 # pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+# pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
 # !pip install numpy
 # !pip install pandas
 # !pip install requests
@@ -186,27 +187,13 @@ def plot_cdf(df):
     '''
     Takes in dataframe with close prices and returns a Cumulative Distribution Function of returns.
     '''
-    dates = pd.date_range(start_, end_, freq='D')
 
-    options = [(date.strftime('%Y/%m/%d'), date) for date in dates]
-    index = (0, len(options)-1)
-
-    selection_range_slider = widgets.SelectionRangeSlider(
-        options=options,
-        index=index,
-        description='Dates',
-        orientation='horizontal',
-        layout={'width': '600px'}
-    )
-#     selection_range_slider
-    
-    ##Change to 1
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
         plt.rcParams['figure.figsize'] = [20, 15]
-        start_date_price = df.iloc[0, 5]
-        cum_return = (df['Adj Close']-start_date_price)/start_date_price
-        plt.plot(df['Date'],cum_return)
+        start_date_price = df_copy.iloc[0, 5]
+        cum_return = (df_copy['Adj Close']-start_date_price)/start_date_price
+        plt.plot(df_copy['Date'],cum_return)
     if len(tickers) == 1: 
         plt.title(str(ticker) + ' Cumulative Return of '+ str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
@@ -219,7 +206,6 @@ def plot_cdf(df):
     description = "A cumulative return is the aggregate amount an investment has gained or lost over time, "
     description += " independent of the period of time involved."
     print(description)
-    return selection_range_slider
  
     
 def plot_historical_volume(df):
