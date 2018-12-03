@@ -1,34 +1,33 @@
-Here are the packages necessary for using our program:
+Here are the packages necessary for using our program. 
+They can be installed using pip install or other installation methods on your local machine.
 
-• https://github.com/matplotlib/mpl_finance/archive/master.zip
-    ◦ For candlestick analysis
-• tabulate
-    ◦ For better readability and printing data
 • numpy
     ◦ For various calculations such as linspace, mean, std, etc.
 • pandas
     ◦ For main data management and cleaning
-• fix_yahoo_finance
-    ◦ For pulling data from yahoo finance
-• pandas_datareader.data
-    ◦ For pulling data from yahoo finance
 • requests
-    ◦ For pulling data from yahoo finance
-• bs4
     ◦ For pulling data from yahoo finance
 • datetime
     ◦ For formatting dates in our plots
 • matplotlib.pylot
     ◦ For plotting
+• https://github.com/matplotlib/mpl_finance/archive/master.zip
+    ◦ For candlestick analysis
+• pandas_datareader.data
+    ◦ For pulling data from yahoo finance
+• fix_yahoo_finance
+    ◦ For pulling data from yahoo finance
+• tabulate
+    ◦ For better readability and printing data
 • seaborn
     ◦ For VaR calculation and graph
-• scipy.stats
+• scipy
     ◦ For normal continuous variables in various calculations
 • math
     ◦ For various calculations
 • urllib3
     ◦ For turning off a neglible warning
-• tkinter
-    ◦ For User interface
-
-They can be installed using pip install or other installation methods on your local machine.
+• widgets from ipywidgets
+    ◦ For user interface
+• display from IPython.display
+    ◦ For user interface
