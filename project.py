@@ -374,7 +374,6 @@ def plot_Relative_Strength_Index(df):
     for i in range(len(tickers_df_list)):
         df_copy = tickers_df_list[i].copy(deep = True)
         differences = df_copy['Adj Close'].diff()
-
         days_up = differences.copy()
         days_up[differences <= 0] = 0.0
         days_down = abs(differences.copy())
@@ -384,14 +383,13 @@ def plot_Relative_Strength_Index(df):
         rolling_down = days_down.rolling(window_length).mean()
 
         RSI = 100 - (100/(1+(rolling_up / rolling_down)))
-        
+        plt.plot(df_copy['Date'],RSI,label = tickers[i])
     if len(tickers) == 1: 
         plt.title(str(ticker) + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     elif len(tickers) >= 1:
         string = ' & '.join(tickers)
         plt.title(string + ' Value at Risk (VaR) from ' + str(start_)[0:11] + 'to ' + str(end_)[0:11])
     plt.figure()
-    RSI.plot()
     plt.show()
     
     description = "The Relative Strength Index (RSI) is a momentum indicator that utilizes the magnitude of "
@@ -401,9 +399,9 @@ def plot_Relative_Strength_Index(df):
     description += "indicating a potential uptick soon. RSI can be utilized with the other analysis chart tools "
     description += "for the user to gauge the overall market sentiment toward the security. Rolling window "
     description += "length used is typically 2 weeks, but this is user changeable."
-    
     print(description)
 
+    
 def plot_candlestick(df):   
     df_copy = df.copy(deep = True)
     df_copy['Date'] = mdates.date2num(df_copy['Date'].astype(datetime.date))
